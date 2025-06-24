@@ -22,6 +22,7 @@ export default function Chatgpt() {
   const [userMessage, setUserMessage] = useState("");
   const [inputMessage, setInputMessage] = useState("");
   const [isScroll, setIsScroll] = useState(false);
+  const [showScrollButton, setShowScrollButton] = useState(false);
 
   useEffect(() => {
     setBodyColor("#212121");
@@ -58,6 +59,12 @@ export default function Chatgpt() {
         setIsScroll(false);
       } else {
         setIsScroll(true);
+      }
+
+      if (document.body.scrollHeight > 800) {
+        setShowScrollButton(true);
+      } else {
+        setShowScrollButton(false);
       }
     };
 
@@ -176,9 +183,7 @@ export default function Chatgpt() {
             id="scroll_to_bottom"
             onClick={scrollToBottom}
             className={`${
-              chatgptConversation.length > 0 &&
-              isScroll &&
-              document.body.scrollHeight > 800
+              chatgptConversation.length > 0 && isScroll && showScrollButton
                 ? "block"
                 : "hidden"
             } border-solid border-[#4A4A4A] border-[1px] translate-x-[-50%] top-[-45px] absolute rounded-full left-1/2 text-[#B9B9B9] bg-[#212121]`}

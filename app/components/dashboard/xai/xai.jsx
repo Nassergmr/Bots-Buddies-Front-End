@@ -23,6 +23,7 @@ export default function XAi() {
   const [userMessage, setUserMessage] = useState("");
   const [inputMessage, setInputMessage] = useState("");
   const [isScroll, setIsScroll] = useState(false);
+  const [showScrollButton, setShowScrollButton] = useState(false);
 
   useEffect(() => {
     setBodyColor("#151718");
@@ -59,6 +60,12 @@ export default function XAi() {
         setIsScroll(false);
       } else {
         setIsScroll(true);
+      }
+
+      if (document.body.scrollHeight > 800) {
+        setShowScrollButton(true);
+      } else {
+        setShowScrollButton(false);
       }
     };
 

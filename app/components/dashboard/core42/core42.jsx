@@ -26,6 +26,7 @@ export default function Core42() {
   const [userMessage, setUserMessage] = useState("");
   const [inputMessage, setInputMessage] = useState("");
   const [isScroll, setIsScroll] = useState(false);
+  const [showScrollButton, setShowScrollButton] = useState(false);
 
   useEffect(() => {
     setBodyColor("#1D232A");
@@ -62,6 +63,12 @@ export default function Core42() {
         setIsScroll(false);
       } else {
         setIsScroll(true);
+      }
+
+      if (document.body.scrollHeight > 800) {
+        setShowScrollButton(true);
+      } else {
+        setShowScrollButton(false);
       }
     };
 
@@ -186,9 +193,7 @@ export default function Core42() {
             id="scroll_to_bottom"
             onClick={scrollToBottom}
             className={`${
-              core42Conversation.length > 0 &&
-              isScroll &&
-              document.body.scrollHeight > 800
+              core42Conversation.length > 0 && isScroll && showScrollButton
                 ? "block"
                 : "hidden"
             } border-solid border-[#4A4A4A] border-[1px] translate-x-[-50%] top-[-45px] absolute rounded-full left-1/2 text-white bg-[#635EF2]`}

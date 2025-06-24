@@ -26,6 +26,7 @@ export default function Meta() {
   const [userMessage, setUserMessage] = useState("");
   const [inputMessage, setInputMessage] = useState("");
   const [isScroll, setIsScroll] = useState(false);
+  const [showScrollButton, setShowScrollButton] = useState(false);
 
   useEffect(() => {
     setBodyColor("#101112");
@@ -62,6 +63,12 @@ export default function Meta() {
         setIsScroll(false);
       } else {
         setIsScroll(true);
+      }
+
+      if (document.body.scrollHeight > 800) {
+        setShowScrollButton(true);
+      } else {
+        setShowScrollButton(false);
       }
     };
 
@@ -182,9 +189,7 @@ export default function Meta() {
             id="scroll_to_bottom"
             onClick={scrollToBottom}
             className={`${
-              metaConversation?.length > 0 &&
-              isScroll &&
-              document.body.scrollHeight > 800
+              metaConversation?.length > 0 && isScroll && showScrollButton
                 ? "block"
                 : "hidden"
             } translate-x-[-50%] top-[-40px] absolute rounded-full left-1/2 text-[#F3F4F5] bg-[#28292B]`}

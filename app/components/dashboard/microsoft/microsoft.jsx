@@ -22,6 +22,7 @@ export default function Microsoft() {
   const [userMessage, setUserMessage] = useState("");
   const [inputMessage, setInputMessage] = useState("");
   const [isScroll, setIsScroll] = useState(false);
+  const [showScrollButton, setShowScrollButton] = useState(false);
 
   useEffect(() => {
     setBodyColor("#101524");
@@ -51,6 +52,12 @@ export default function Microsoft() {
         setIsScroll(false);
       } else {
         setIsScroll(true);
+      }
+
+      if (document.body.scrollHeight > 800) {
+        setShowScrollButton(true);
+      } else {
+        setShowScrollButton(false);
       }
     };
 
@@ -174,9 +181,7 @@ export default function Microsoft() {
             id="scroll_to_bottom"
             onClick={scrollToBottom}
             className={`${
-              microsoftConversation.length > 0 &&
-              isScroll &&
-              document.body.scrollHeight > 800
+              microsoftConversation.length > 0 && isScroll && showScrollButton
                 ? "block"
                 : "hidden"
             } border-solid border-[#4A4A4A] border translate-x-[-50%] top-[-45px] absolute rounded-full left-1/2 text-[#B9B9B9] bg-[#30374a]`}
