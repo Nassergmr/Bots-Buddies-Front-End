@@ -1,3 +1,5 @@
-export default function BodyColor({ color }) {
-  document.documentElement.style.setProperty("--bodyColor", color);
+export default function setBodyColor(color) {
+  if (typeof document !== "undefined") {
+    document.documentElement.style.setProperty("--bodyColor", color);
+  }
 }

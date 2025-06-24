@@ -7,9 +7,9 @@ import { FaArrowUp } from "react-icons/fa6";
 import { FaArrowDown } from "react-icons/fa6";
 import { IoIosArrowDown } from "react-icons/io";
 import Messages from "../messages";
-import BodyColor from "../../elements/bodyColor";
 import LottieComponent from "./lottieComponent";
 import ResetButton from "../../../assets/reset.png";
+import setBodyColor from "../../elements/bodyColor";
 
 export default function Meta() {
   const {
@@ -28,7 +28,7 @@ export default function Meta() {
   const [isScroll, setIsScroll] = useState(false);
 
   useEffect(() => {
-    BodyColor({ color: "#101112" });
+    setBodyColor("#101112");
   }, []);
 
   // Fix a ui issue

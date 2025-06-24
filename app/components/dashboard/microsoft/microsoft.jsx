@@ -5,9 +5,9 @@ import { useState, useContext, useEffect, useRef } from "react";
 import { MyContext } from "../../../client";
 import { FaArrowUp } from "react-icons/fa6";
 import { FaArrowDown } from "react-icons/fa6";
-import BodyColor from "../../elements/bodyColor";
 import Messages from "../messages";
 import ResetButton from "../../../assets/reset.png";
+import setBodyColor from "../../elements/bodyColor";
 
 export default function Microsoft() {
   const {
@@ -24,7 +24,7 @@ export default function Microsoft() {
   const [isScroll, setIsScroll] = useState(false);
 
   useEffect(() => {
-    BodyColor({ color: "#101524" });
+    setBodyColor("#101524");
   }, []);
 
   // Await page content until page loads (in case user refresh page)

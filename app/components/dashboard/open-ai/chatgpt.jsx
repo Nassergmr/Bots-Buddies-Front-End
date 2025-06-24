@@ -5,9 +5,9 @@ import Image from "next/image";
 import { MyContext } from "../../../client";
 import { FaArrowUp } from "react-icons/fa6";
 import { FaArrowDown } from "react-icons/fa6";
-import BodyColor from "../../elements/bodyColor";
 import Messages from "../messages";
 import ResetButton from "../../../assets/reset.png";
+import setBodyColor from "../../elements/bodyColor";
 
 export default function Chatgpt() {
   const {
@@ -24,7 +24,7 @@ export default function Chatgpt() {
   const [isScroll, setIsScroll] = useState(false);
 
   useEffect(() => {
-    BodyColor({ color: "#212121" });
+    setBodyColor("#212121");
   }, []);
 
   // Fix a ui issue

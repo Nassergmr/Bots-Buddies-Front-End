@@ -8,10 +8,10 @@ import { ToastContainer } from "react-toastify";
 import { toast } from "react-toastify";
 import { Slide } from "react-toastify";
 import { MyContext } from "../../../client";
-import BodyColor from "../../elements/bodyColor";
 import Messages from "../messages";
 import ResetButton from "../../../assets/reset.png";
 import Logo from "../../../assets/jaisv2-dark.png";
+import setBodyColor from "../../elements/bodyColor";
 
 export default function Core42() {
   const {
@@ -27,7 +27,9 @@ export default function Core42() {
   const [inputMessage, setInputMessage] = useState("");
   const [isScroll, setIsScroll] = useState(false);
 
-  BodyColor({ color: "#1D232A" });
+  useEffect(() => {
+    setBodyColor("#1D232A");
+  }, []);
 
   // Fix a ui issue
   useEffect(() => {

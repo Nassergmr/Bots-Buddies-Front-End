@@ -4,11 +4,11 @@ import { useState, useContext, useEffect, useRef } from "react";
 import { MyContext } from "../../../client";
 import { FaArrowUp } from "react-icons/fa6";
 import { FaArrowDown } from "react-icons/fa6";
-import BodyColor from "../../elements/bodyColor";
 import Messages from "../messages";
 import Image from "next/image";
 import groklogo from "../../../assets/grok.png";
 import ResetButton from "../../../assets/reset.png";
+import setBodyColor from "../../elements/bodyColor";
 
 export default function XAi() {
   const {
@@ -25,7 +25,7 @@ export default function XAi() {
   const [isScroll, setIsScroll] = useState(false);
 
   useEffect(() => {
-    BodyColor({ color: "#151718" });
+    setBodyColor("#151718");
   }, []);
 
   // Fix a ui issue
