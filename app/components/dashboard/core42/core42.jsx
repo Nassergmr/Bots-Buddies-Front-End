@@ -22,11 +22,11 @@ export default function Core42() {
     setIsLoaded,
   } = useContext(MyContext);
 
-  const messagesEndRef = useRef(null);
   const [userMessage, setUserMessage] = useState("");
   const [inputMessage, setInputMessage] = useState("");
   const [isScroll, setIsScroll] = useState(false);
   const [showScrollButton, setShowScrollButton] = useState(false);
+  const inputRef = useRef();
 
   useEffect(() => {
     setBodyColor("#1D232A");
@@ -88,6 +88,7 @@ export default function Core42() {
 
   const handleInputMessage = () => {
     if (inputMessage.trim() !== "") {
+      inputRef.current?.blur(); // hide the keyboard when message is sent (on mobile)
       setUserMessage(inputMessage);
       sendCore42UserMessage(inputMessage); // Send The User Message To Core42 Api
       setInputMessage("");
@@ -96,6 +97,10 @@ export default function Core42() {
         ...prev,
         { text: inputMessage, animate: false, isloading: true },
       ]);
+      // scroll exactly to bottom
+      setTimeout(() => {
+        scrollToBottom();
+      }, 0);
     }
   };
 
@@ -125,7 +130,7 @@ export default function Core42() {
     >
       <div
         id="messages_container"
-        className={`mx-auto text-[#FEFEFE] text-lg mt-[100px] break-words whitespace-normal xl:w-[50%] lg:w-[60%] md:w-[70%] sm:w-[80%] z-20`}
+        className={`px-1 mx-auto text-[#FEFEFE] text-lg mt-[100px] break-words whitespace-normal xl:w-[50%] lg:w-[60%] md:w-[70%] sm:w-[80%] z-20`}
       >
         {/* Reset button */}
         <div
@@ -146,16 +151,13 @@ export default function Core42() {
             />
           </button>
         </div>
-        <Messages
-          core42Conversation={core42Conversation}
-          messagesEndRef={messagesEndRef}
-        />
+        <Messages core42Conversation={core42Conversation} />
       </div>
 
       {/* Area Placeholder (make some space above input area) */}
       <div
         id="area_placeholder"
-        className="w-full  bg-inherit h-[112px] relative"
+        className="w-full bg-inherit h-[172px] relative"
         style={{ display: core42Conversation.length > 0 ? "block" : "none" }}
       ></div>
 
@@ -179,6 +181,7 @@ export default function Core42() {
             height={180}
             className=" mx-auto"
             alt=""
+            priority
           />
         </div>
 
@@ -223,9 +226,11 @@ export default function Core42() {
                     </p>
                   </div>
                 );
+                inputRef.current?.blur(); // hide the keyboard when message is sent (on mobile)
               }
             }}
             className="pr-5 pl-[65px] py-6 focus:outline-none text-[#141718] placeholder-[#6C7275] bg-[#FFFFFF] rounded-md w-full"
+            ref={inputRef}
           />
           {/* Send Message Button */}
           <button
@@ -243,7 +248,7 @@ export default function Core42() {
           id="info"
           className={`${
             core42Conversation.length > 0 ? "fixed block" : "hidden"
-          } w-full bottom-[-1px] h-[30px] left-0 bg-[#1D232A]`}
+          } w-full bottom-[-1px] h-[30px] left-0`}
         >
           <p
             className={`absolute w-full left-[50%] translate-x-[-50%] top-[50%] translate-y-[-50%] text-[#B4B4B4] text-center text-xs`}

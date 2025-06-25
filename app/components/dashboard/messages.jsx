@@ -53,7 +53,6 @@ export default function Messages({
             {/* User Message */}
             {!mssg.isai && (
               <div
-                ref={messagesEndRef}
                 id="user_message_container"
                 className="sm:max-w-[65%] max-w-[75%] ml-auto break-words whitespace-normal my-8"
               >
@@ -77,6 +76,7 @@ export default function Messages({
             {/* Chatgpt Response */}
             {mssg.isai && (
               <span className="leading-relaxed">
+                {/*  */}
                 {mssg.animate ? (
                   <TypeWriter text={mssg.text} delay={0.3} infinite />
                 ) : (
@@ -96,7 +96,6 @@ export default function Messages({
             {/* User Message */}
             {!mssg.isai && (
               <div
-                ref={messagesEndRef}
                 id="user_message_container"
                 className="sm:max-w-[65%] max-w-[75%] break-words whitespace-normal mb-3 mt-9"
               >
@@ -144,7 +143,6 @@ export default function Messages({
             {/* User Message */}
             {!mssg.isai && (
               <div
-                ref={messagesEndRef}
                 id="user_message_container"
                 className="sm:max-w-[65%] max-w-[75%] ml-auto break-words whitespace-normal my-8"
               >
@@ -188,7 +186,6 @@ export default function Messages({
             {/* User Message */}
             {!mssg.isai && (
               <div
-                ref={messagesEndRef}
                 id="user_message_container"
                 className="sm:max-w-[65%] max-w-[75%] ml-auto break-words whitespace-normal my-8"
               >
@@ -231,7 +228,7 @@ export default function Messages({
           <div key={index}>
             {/* User Message */}
             {!mssg.isai && (
-              <div ref={messagesEndRef} className="flex flex-col ">
+              <div className="flex flex-col ">
                 <div className="flex gap-2 items-center">
                   <div className="rounded-full bg-[#EEF1FF] flex items-center justify-center size-7">
                     <FiUser size={28} className=" p-1 text-black" />
@@ -239,7 +236,6 @@ export default function Messages({
                   <h4 className="pt-2">أنت</h4>
                 </div>
                 <div
-                  ref={messagesEndRef}
                   id="user_message_container"
                   className="sm:max-w-[65%] max-w-[75%] break-words whitespace-normal"
                 >

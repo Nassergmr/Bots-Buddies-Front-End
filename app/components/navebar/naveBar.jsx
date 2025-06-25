@@ -22,9 +22,13 @@ export default function NaveBar() {
   useEffect(() => {
     setButtonActive(true);
 
-    setTimeout(() => {
-      setButtonActive(false);
-    }, 1000);
+    // Disable button effect after 1s on large screens
+    const bodyWidth = window.innerWidth;
+    if (bodyWidth > 1024) {
+      setTimeout(() => {
+        setButtonActive(false);
+      }, 1000);
+    }
   }, [path]);
 
   const handleDrawer = () => {
@@ -58,6 +62,7 @@ export default function NaveBar() {
               />
               <span>Open Ai</span>
             </Link>
+
             <Link
               className={`cool_button liberationText ${
                 path.includes("meta") && buttonActive ? "clicked" : ""
@@ -74,6 +79,23 @@ export default function NaveBar() {
               />
               <span>Meta</span>
             </Link>
+
+            <Link
+              href={"/bots/core42"}
+              id="Core42"
+              className={`cool_button ${
+                path.includes("core") && buttonActive ? "clicked" : ""
+              }`}
+            >
+              <Image
+                src={Core42Logo}
+                width={95}
+                height={95}
+                alt=""
+                className="z-10"
+              />
+            </Link>
+
             <Link
               className={`cool_button gintoText ${
                 path.includes("microsoft") && buttonActive ? "clicked" : ""
@@ -107,22 +129,6 @@ export default function NaveBar() {
               />
               <span>xAI</span>
             </Link>
-
-            <Link
-              href={"/bots/core42"}
-              id="Core42"
-              className={`cool_button ${
-                path.includes("core") && buttonActive ? "clicked" : ""
-              }`}
-            >
-              <Image
-                src={Core42Logo}
-                width={95}
-                height={95}
-                alt=""
-                className="z-10"
-              />
-            </Link>
           </div>
 
           {/* Open Drawer Button */}
@@ -135,7 +141,13 @@ export default function NaveBar() {
         </div>
 
         {/* Drawer */}
-        <Drawer openDrawer={openDrawer} setOpenDrawer={setOpenDrawer} />
+        <Drawer
+          path={path}
+          buttonActive={buttonActive}
+          setButtonActive={setButtonActive}
+          openDrawer={openDrawer}
+          setOpenDrawer={setOpenDrawer}
+        />
 
         {/* Overlay */}
         <div

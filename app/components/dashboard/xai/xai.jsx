@@ -19,11 +19,11 @@ export default function XAi() {
     setIsLoaded,
   } = useContext(MyContext);
 
-  const messagesEndRef = useRef(null);
   const [userMessage, setUserMessage] = useState("");
   const [inputMessage, setInputMessage] = useState("");
   const [isScroll, setIsScroll] = useState(false);
   const [showScrollButton, setShowScrollButton] = useState(false);
+  const inputRef = useRef();
 
   useEffect(() => {
     setBodyColor("#151718");
@@ -85,6 +85,7 @@ export default function XAi() {
 
   const handleInputMessage = () => {
     if (inputMessage.trim() !== "") {
+      inputRef.current?.blur(); // hide the keyboard when message is sent (on mobile)
       setUserMessage(inputMessage);
       sendXAiUserMessage(inputMessage); // Send The User Message To Chatgpt Api
       setInputMessage("");
@@ -93,6 +94,10 @@ export default function XAi() {
         ...prev,
         { text: inputMessage, animate: false, isloading: true },
       ]);
+      // scroll exactly to bottom
+      setTimeout(() => {
+        scrollToBottom();
+      }, 0);
     }
   };
 
@@ -121,7 +126,7 @@ export default function XAi() {
     >
       <div
         id="messages_container"
-        className={`mx-auto mt-[100px] break-words whitespace-normal xl:w-[50%] lg:w-[60%] md:w-[70%] sm:w-[80%] z-20`}
+        className={`px-1 mx-auto mt-[100px] break-words whitespace-normal xl:w-[50%] lg:w-[60%] md:w-[70%] sm:w-[80%] z-20`}
       >
         {/* Reset button */}
         <div
@@ -142,16 +147,13 @@ export default function XAi() {
             <span>Reset</span>
           </button>
         </div>
-        <Messages
-          xAiConversation={xAiConversation}
-          messagesEndRef={messagesEndRef}
-        />
+        <Messages xAiConversation={xAiConversation} />
       </div>
 
       {/* Area Placeholder (make some space above input area) */}
       <div
         id="area_placeholder"
-        className="w-full bg-[#151718] h-[140px] relative"
+        className="w-full bg-[#151718] h-[200px] relative"
         style={{ display: xAiConversation.length > 0 ? "block" : "none" }}
       ></div>
 
@@ -169,7 +171,7 @@ export default function XAi() {
           className="flex gap-2 items-center text-center justify-center mb-9"
           style={{ opacity: xAiConversation.length > 0 ? 0 : 1 }}
         >
-          <Image src={groklogo} width={100} height={100} alt="logo" />
+          <Image src={groklogo} width={100} height={100} alt="logo" priority />
           <h1 id="title" className=" text-[#FCFCFC] text-5xl">
             Grok
           </h1>
@@ -203,6 +205,7 @@ export default function XAi() {
             onKeyDown={handleKeyDown}
             onChange={(e) => setInputMessage(e.target.value)}
             className="pl-5 pr-[65px] py-6 focus:outline-none border border-[#383A3C] placeholder-[#99999A] bg-[#242628] rounded-2xl w-full"
+            ref={inputRef}
           />
           {/* Send Message Button */}
           <button
@@ -220,7 +223,7 @@ export default function XAi() {
           id="info"
           className={`${
             xAiConversation.length > 0 ? "fixed block" : "hidden"
-          } w-full bottom-[-1px] h-[30px] bg-[#151718] left-0`}
+          } w-full bottom-[-1px] h-[30px] left-0`}
         >
           <p
             className={`absolute w-full left-[50%] translate-x-[-50%] top-[50%] translate-y-[-50%] text-[#B4B4B4] text-center text-xs`}

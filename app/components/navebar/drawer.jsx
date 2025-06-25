@@ -7,7 +7,13 @@ import XAiLogo from "../../assets/logos/xai.png";
 import Core42Logo from "../../assets/logos/core42.png";
 import { IoMdClose } from "react-icons/io";
 
-export default function Drawer({ openDrawer, setOpenDrawer }) {
+export default function Drawer({
+  openDrawer,
+  setOpenDrawer,
+  buttonActive,
+  setButtonActive,
+  path,
+}) {
   return (
     <>
       <div
@@ -26,7 +32,9 @@ export default function Drawer({ openDrawer, setOpenDrawer }) {
 
         <Link
           onClick={() => setOpenDrawer(false)}
-          className={`cool_button mt-12 !w-full !py-4`}
+          className={`cool_button mt-12 !w-full !py-4  ${
+            path.includes("open-ai") && buttonActive ? "clicked" : ""
+          }`}
           href={"/bots/open-ai"}
           id="open-ai"
         >
@@ -39,9 +47,12 @@ export default function Drawer({ openDrawer, setOpenDrawer }) {
           />
           <span>Open Ai</span>
         </Link>
+
         <Link
           onClick={() => setOpenDrawer(false)}
-          className={`cool_button liberationText !w-full !py-4`}
+          className={`cool_button liberationText !w-full !py-4 ${
+            path.includes("meta") && buttonActive ? "clicked" : ""
+          }`}
           href={"/bots/meta"}
           id="meta"
         >
@@ -54,9 +65,29 @@ export default function Drawer({ openDrawer, setOpenDrawer }) {
           />
           <span>Meta</span>
         </Link>
+
         <Link
           onClick={() => setOpenDrawer(false)}
-          className={`cool_button gintoText !w-full !py-4`}
+          href={"/bots/core42"}
+          id="Core42"
+          className={`cool_button !w-full !py-4 ${
+            path.includes("core42") && buttonActive ? "clicked" : ""
+          }`}
+        >
+          <Image
+            src={Core42Logo}
+            width={95}
+            height={95}
+            alt=""
+            className="z-10"
+          />
+        </Link>
+
+        <Link
+          onClick={() => setOpenDrawer(false)}
+          className={`cool_button gintoText !w-full !py-4 ${
+            path.includes("microsoft") && buttonActive ? "clicked" : ""
+          }`}
           href={"/bots/microsoft"}
           id="microsoft"
         >
@@ -74,25 +105,12 @@ export default function Drawer({ openDrawer, setOpenDrawer }) {
           onClick={() => setOpenDrawer(false)}
           href={"/bots/xai"}
           id="xai"
-          className={`cool_button manropeText !w-full !py-4`}
+          className={`cool_button manropeText !w-full !py-4 ${
+            path.includes("xai") && buttonActive ? "clicked" : ""
+          }`}
         >
           <Image src={XAiLogo} width={30} height={30} alt="" className="z-10" />
           <span>xAI</span>
-        </Link>
-
-        <Link
-          onClick={() => setOpenDrawer(false)}
-          href={"/bots/core42"}
-          id="Core42"
-          className={`cool_button !w-full !py-4`}
-        >
-          <Image
-            src={Core42Logo}
-            width={95}
-            height={95}
-            alt=""
-            className="z-10"
-          />
         </Link>
       </div>
     </>

@@ -18,11 +18,11 @@ export default function Chatgpt() {
     setIsLoaded,
   } = useContext(MyContext);
 
-  const messagesEndRef = useRef(null);
   const [userMessage, setUserMessage] = useState("");
   const [inputMessage, setInputMessage] = useState("");
   const [isScroll, setIsScroll] = useState(false);
   const [showScrollButton, setShowScrollButton] = useState(false);
+  const inputRef = useRef();
 
   useEffect(() => {
     setBodyColor("#212121");
@@ -46,7 +46,7 @@ export default function Chatgpt() {
     setIsLoaded(true);
   }, []);
 
-  // Scroll to bottom
+  // Scroll To Bottom On Button Click
   useEffect(() => {
     const handleScroll = () => {
       const scrollHeight = window.innerHeight * 2;
@@ -73,10 +73,6 @@ export default function Chatgpt() {
   }, []);
 
   useEffect(() => {
-    scrollToBottom();
-  }, [chatgptConversation]);
-
-  useEffect(() => {
     if (process.env.NODE_ENV === "development") {
       console.log("Core42 Conversation:", chatgptConversation);
     }
@@ -84,6 +80,7 @@ export default function Chatgpt() {
 
   const handleInputMessage = () => {
     if (inputMessage.trim() !== "") {
+      inputRef.current?.blur(); // hide the keyboard when message is sent (on mobile)
       setUserMessage(inputMessage);
       sendChatgptUserMessage(inputMessage); // Send The User Message To Chatgpt Api
       setInputMessage("");
@@ -92,6 +89,10 @@ export default function Chatgpt() {
         ...prev,
         { text: inputMessage, animate: false, isloading: true },
       ]);
+      // scroll exactly to bottom
+      setTimeout(() => {
+        scrollToBottom();
+      }, 0);
     }
   };
 
@@ -101,14 +102,9 @@ export default function Chatgpt() {
     }
   };
 
-  // Scoll To Buttom On Button Click
+  // Scoll To Bottom
   const scrollToBottom = () => {
     window.scrollTo({ top: document.body.scrollHeight });
-  };
-
-  // Auto Scroll To Latest Message
-  const scrollToBottomMessages = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
   return (
@@ -120,7 +116,7 @@ export default function Chatgpt() {
     >
       <div
         id="messages_container"
-        className={`mx-auto mt-[100px] break-words whitespace-normal xl:w-[50%] lg:w-[60%] md:w-[70%] sm:w-[80%] w-[98%] z-[20]`}
+        className={`px-1 mx-auto mt-[100px] break-words whitespace-normal xl:w-[50%] lg:w-[60%] md:w-[70%] sm:w-[80%] w-[98%] z-[20]`}
       >
         {/* Reset button */}
         <div
@@ -141,16 +137,13 @@ export default function Chatgpt() {
             <span>Reset</span>
           </button>
         </div>
-        <Messages
-          chatgptConversation={chatgptConversation}
-          messagesEndRef={messagesEndRef}
-        />
+        <Messages chatgptConversation={chatgptConversation} />
       </div>
 
       {/* Area Placeholder (make some space above input area) */}
       <div
         id="area_placeholder"
-        className="w-full  bg-inherit h-[140px] relative"
+        className="w-full bg-inherit h-[200px] relative"
         style={{ display: chatgptConversation.length > 0 ? "block" : "none" }}
       ></div>
 
@@ -160,8 +153,7 @@ export default function Chatgpt() {
     ${
       chatgptConversation.length > 0
         ? `bottom-0 fixed  translate-x-[-50%] left-[50%]`
-        : "top-[50%] absolute translate-x-[-50%] left-[50%]  translate-y-[calc(-50%-90px)]"
-      //
+        : "top-[50%] absolute translate-x-[-50%] left-[50%] translate-y-[calc(-50%-90px)]"
     }`}
       >
         <h2
@@ -198,6 +190,7 @@ export default function Chatgpt() {
             onKeyDown={handleKeyDown}
             onChange={(e) => setInputMessage(e.target.value)}
             className="pl-5 pr-[65px] py-6 focus:outline-none placeholder-[#B4B4B4] bg-[#303030] rounded-xl w-full"
+            ref={inputRef}
           />
           {/* Send Message Button */}
           <button
@@ -215,7 +208,7 @@ export default function Chatgpt() {
           id="info"
           className={`${
             chatgptConversation.length > 0 ? "fixed block" : "hidden"
-          } w-full bottom-[-1px] h-[30px] left-0 bg-[#212121]`}
+          } w-full bottom-[-1px] h-[30px] left-0`}
         >
           <p
             className={`absolute w-full left-[50%] translate-x-[-50%] top-[50%] translate-y-[-50%] text-[#B4B4B4] text-center text-xs`}

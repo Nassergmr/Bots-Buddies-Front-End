@@ -308,26 +308,12 @@ export default function Client({ children }) {
       );
     });
 
-    // Alert for the rate limit error (50 requests a day)
-    socketRef.current.on("rate_limit_exceeded", (data) => {
-      const retryAfterHours = Math.floor(data.retryAfter / 3600);
-      const retryAfterSeconds = Math.floor(data.retryAfter / 60);
+    // Alert for the rate limit error (ex: 50 requests a day)
+    socketRef.current.on("rate_limit_exceeded", () => {
       toast(
         <div className="flex flex-col gap-3 text-center">
           <FaExclamationCircle size={32} className="mx-auto text-red-600" />
-          {retryAfterHours > 0 ? (
-            <span className="text-[14px]">
-              {`The daily limit of 50 requests has been reached. The limit will
-            reset in ${retryAfterHours} ${
-                retryAfterHours === 1 ? `hour.` : `hours.`
-              }`}
-            </span>
-          ) : (
-            <span className="text-[14px]">{`The daily limit of 50 requests has been reached. The limit will
-            reset in ${retryAfterSeconds} ${
-              retryAfterSeconds === 1 ? `minute` : `minutes`
-            }.`}</span>
-          )}
+          <div>Daily rate limit reached for this model, retry later</div>
         </div>,
         {
           position: "top-center",
@@ -336,11 +322,10 @@ export default function Client({ children }) {
           draggable: false,
           theme: "light",
           transition: Zoom,
-          closeButton: false,
+          closeButton: true,
           className: "custom-toast",
         }
       );
-      setShowOverlay(true);
     });
 
     socketRef.current.on("disconnect", (reason) => {
@@ -381,7 +366,6 @@ export default function Client({ children }) {
       }}
     >
       {/* Alert the user of rate limit */}
-      {showOverlay && <div id="overlay"></div>}
       <ToastContainer
         position="top-center"
         autoClose={false}

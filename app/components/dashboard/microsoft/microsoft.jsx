@@ -18,11 +18,11 @@ export default function Microsoft() {
     setIsLoaded,
   } = useContext(MyContext);
 
-  const messagesEndRef = useRef(null);
   const [userMessage, setUserMessage] = useState("");
   const [inputMessage, setInputMessage] = useState("");
   const [isScroll, setIsScroll] = useState(false);
   const [showScrollButton, setShowScrollButton] = useState(false);
+  const inputRef = useRef();
 
   useEffect(() => {
     setBodyColor("#101524");
@@ -77,6 +77,7 @@ export default function Microsoft() {
 
   const handleInputMessage = () => {
     if (inputMessage.trim() !== "") {
+      inputRef.current?.blur(); // hide the keyboard when message is sent (on mobile)
       setUserMessage(inputMessage);
       sendMicrosoftUserMessage(inputMessage); // Send The User Message To Microsoft Api
       setInputMessage("");
@@ -85,6 +86,10 @@ export default function Microsoft() {
         ...prev,
         { text: inputMessage, animate: false, isloading: true },
       ]);
+      // scroll exactly to bottom
+      setTimeout(() => {
+        scrollToBottom();
+      }, 0);
     }
   };
 
@@ -113,7 +118,7 @@ export default function Microsoft() {
     >
       <div
         id="messages_container"
-        className={`mx-auto text-[#E1CEBF] mt-[100px] break-words whitespace-normal xl:w-[50%] lg:w-[60%] md:w-[70%] sm:w-[80%] w-[98%] z-20`}
+        className={`px-1 mx-auto text-[#E1CEBF] mt-[100px] break-words whitespace-normal xl:w-[50%] lg:w-[60%] md:w-[70%] sm:w-[80%] w-[98%] z-20`}
       >
         {/* Reset button */}
         <div
@@ -135,16 +140,13 @@ export default function Microsoft() {
           </button>
         </div>
 
-        <Messages
-          microsoftConversation={microsoftConversation}
-          messagesEndRef={messagesEndRef}
-        />
+        <Messages microsoftConversation={microsoftConversation} />
       </div>
 
       {/* Area Placeholder (make some space above input area) */}
       <div
         id="area_placeholder"
-        className="w-full bg-inherit h-[160px] relative"
+        className="w-full bg-inherit h-[200px] relative"
         style={{ display: microsoftConversation.length > 0 ? "block" : "none" }}
       ></div>
 
@@ -195,7 +197,8 @@ export default function Microsoft() {
             value={inputMessage}
             onKeyDown={handleKeyDown}
             onChange={(e) => setInputMessage(e.target.value)}
-            className=" pl-5 pr-[65px] py-6 focus:outline-none placeholder-[#828BAC] bg-[#151C2F] rounded-3xl w-full border-[6px] border-[#1B2235]"
+            className="pl-5 pr-[65px] py-6 focus:outline-none placeholder-[#828BAC] bg-[#151C2F] rounded-3xl w-full border-[6px] border-[#1B2235]"
+            ref={inputRef}
           />
 
           {/* Send Message Button */}
@@ -216,7 +219,7 @@ export default function Microsoft() {
           id="info"
           className={`${
             microsoftConversation.length > 0 ? "fixed block" : "hidden"
-          } w-full bottom-[-1px] h-[30px] text-[#E0CEBF] bg-[#101524] left-0`}
+          } w-full bottom-[-1px] h-[30px] text-[#E0CEBF] left-0`}
         >
           <p
             className={`absolute w-full left-[50%] translate-x-[-50%] top-[50%] translate-y-[-50%] text-[#B4B4B4] text-center text-xs`}

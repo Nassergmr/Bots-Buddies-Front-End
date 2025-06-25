@@ -22,11 +22,11 @@ export default function Meta() {
     setIsLoaded,
   } = useContext(MyContext);
 
-  const messagesEndRef = useRef(null);
   const [userMessage, setUserMessage] = useState("");
   const [inputMessage, setInputMessage] = useState("");
   const [isScroll, setIsScroll] = useState(false);
   const [showScrollButton, setShowScrollButton] = useState(false);
+  const inputRef = useRef();
 
   useEffect(() => {
     setBodyColor("#101112");
@@ -88,6 +88,7 @@ export default function Meta() {
 
   const handleInputMessage = () => {
     if (inputMessage.trim() !== "") {
+      inputRef.current?.blur(); // hide the keyboard when message is sent (on mobile)
       setUserMessage(inputMessage);
       sendMetaUserMessage(inputMessage); // Send The User Message To meta Api
       setInputMessage("");
@@ -96,6 +97,10 @@ export default function Meta() {
         ...prev,
         { text: inputMessage, animate: false, isloading: true },
       ]);
+      // scroll exactly to bottom
+      setTimeout(() => {
+        scrollToBottom();
+      }, 0);
     }
   };
 
@@ -124,7 +129,7 @@ export default function Meta() {
     >
       <div
         id="messages_container"
-        className={`mx-auto mt-[100px] text-[#F3F4F5] break-words whitespace-normal z-20 xl:w-[50%] lg:w-[60%] md:w-[70%] sm:w-[80%] w-[98%]`}
+        className={`px-1 mx-auto mt-[100px] text-[#F3F4F5] break-words whitespace-normal z-20 xl:w-[50%] lg:w-[60%] md:w-[70%] sm:w-[80%] w-[98%]`}
       >
         {/* Reset button */}
         <div
@@ -146,22 +151,19 @@ export default function Meta() {
           </button>
         </div>
 
-        <Messages
-          metaConversation={metaConversation}
-          messagesEndRef={messagesEndRef}
-        />
+        <Messages metaConversation={metaConversation} />
       </div>
 
       {/* Area Placeholder (make some space above input area) */}
       <div
         id="area_placeholder"
-        className="w-full bg-inherit h-[140px] relative"
+        className="w-full bg-inherit h-[200px] relative"
         style={{ display: metaConversation.length > 0 ? "block" : "none" }}
       ></div>
 
       <div
         id="chat_container"
-        className={`z-30 px-3 transition ease-out duration-500 lg:w-[62%] md:w-[72%] sm:w-[82%] w-full
+        className={`z-30 px-3 transition ease-out duration-500 xl:w-[52%] lg:w-[62%] md:w-[72%] sm:w-[82%] w-full
     ${
       metaConversation?.length > 0
         ? `bottom-0 fixed  translate-x-[-50%] left-[50%]`
@@ -198,11 +200,12 @@ export default function Meta() {
           </button>
           {/* Input */}
           <input
-            placeholder="Ask Llama 4 Scout 17B 16E Instruct"
+            placeholder="Ask Llama 3 Scout 13B 16E Instruct"
             value={inputMessage}
             onKeyDown={handleKeyDown}
             onChange={(e) => setInputMessage(e.target.value)}
             className="pl-5 pr-[65px] py-6 focus:outline-none placeholder-[#A9ABB1] bg-[#17181A] rounded-2xl w-full border-t-2 border-double border-[#252627]"
+            ref={inputRef}
           />
           {/* Send Message Button */}
           <button
@@ -219,7 +222,7 @@ export default function Meta() {
           id="info"
           className={`${
             metaConversation.length > 0 ? "fixed block" : "hidden"
-          } w-full bottom-[-1px] h-[30px] left-0 bg-[#101112]`}
+          } w-full bottom-[-1px] h-[30px] left-0`}
         >
           <p
             className={`absolute w-full left-[50%] translate-x-[-50%] top-[50%] translate-y-[-50%] text-[#B4B4B4] text-center text-xs`}
