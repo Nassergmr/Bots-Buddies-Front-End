@@ -16,6 +16,7 @@ export default function Microsoft() {
     sendMicrosoftUserMessage,
     isLoaded,
     setIsLoaded,
+    isLimit,
   } = useContext(MyContext);
 
   const [userMessage, setUserMessage] = useState("");
@@ -66,17 +67,13 @@ export default function Microsoft() {
   }, []);
 
   useEffect(() => {
-    scrollToBottom();
-  }, [microsoftConversation]);
-
-  useEffect(() => {
     if (process.env.NODE_ENV === "development") {
       console.log("Core42 Conversation:", microsoftConversation);
     }
   }, [microsoftConversation]);
 
   const handleInputMessage = () => {
-    if (inputMessage.trim() !== "") {
+    if (inputMessage.trim() !== "" && !isLimit) {
       inputRef.current?.blur(); // hide the keyboard when message is sent (on mobile)
       setUserMessage(inputMessage);
       sendMicrosoftUserMessage(inputMessage); // Send The User Message To Microsoft Api
@@ -92,6 +89,15 @@ export default function Microsoft() {
       }, 0);
     }
   };
+
+  // Remove last object from the array when limit is reached
+  useEffect(() => {
+    if (isLimit) {
+      setTimeout(() => {
+        setMicrosoftConversation((prev) => prev.slice(0, -1));
+      }, 4000);
+    }
+  }, [isLimit]);
 
   const handleKeyDown = (e) => {
     if (e.key === "Enter" && inputMessage.trim() !== "") {
@@ -206,7 +212,7 @@ export default function Microsoft() {
             id="send_message"
             title={`${inputMessage ? "Send message" : "Message is empty"}`}
             onClick={handleInputMessage}
-            disabled={!inputMessage}
+            disabled={!inputMessage && isLimit}
             style={{ display: !inputMessage ? "none" : "block" }}
             className="absolute rounded-lg right-0 top-[50%]  text-[#E3CBBC] hover:bg-[#505B7B] bg-[#455172] translate-y-[-50%] mr-4"
           >
@@ -219,7 +225,7 @@ export default function Microsoft() {
           id="info"
           className={`${
             microsoftConversation.length > 0 ? "fixed block" : "hidden"
-          } w-full bottom-[-1px] h-[30px] text-[#E0CEBF] left-0`}
+          } w-full bottom-[-1px] h-[30px] text-[#E0CEBF] left-0 bg-[#101524]`}
         >
           <p
             className={`absolute w-full left-[50%] translate-x-[-50%] top-[50%] translate-y-[-50%] text-[#B4B4B4] text-center text-xs`}

@@ -20,6 +20,7 @@ export default function Core42() {
     sendCore42UserMessage,
     isLoaded,
     setIsLoaded,
+    isLimit,
   } = useContext(MyContext);
 
   const [userMessage, setUserMessage] = useState("");
@@ -30,13 +31,6 @@ export default function Core42() {
 
   useEffect(() => {
     setBodyColor("#1D232A");
-  }, []);
-
-  // Fix a ui issue
-  useEffect(() => {
-    setTimeout(() => {
-      info.style.backgroundColor = "#1D232A";
-    }, 500);
   }, []);
 
   // Await page content until page loads (in case user refresh page)
@@ -77,17 +71,13 @@ export default function Core42() {
   }, []);
 
   useEffect(() => {
-    scrollToBottom();
-  }, [core42Conversation]);
-
-  useEffect(() => {
     if (process.env.NODE_ENV === "development") {
       console.log("Core42 Conversation:", core42Conversation);
     }
   }, [core42Conversation]);
 
   const handleInputMessage = () => {
-    if (inputMessage.trim() !== "") {
+    if (inputMessage.trim() !== "" && !isLimit) {
       inputRef.current?.blur(); // hide the keyboard when message is sent (on mobile)
       setUserMessage(inputMessage);
       sendCore42UserMessage(inputMessage); // Send The User Message To Core42 Api
@@ -103,6 +93,15 @@ export default function Core42() {
       }, 0);
     }
   };
+
+  // Remove last object from the array when limit is reached
+  useEffect(() => {
+    if (isLimit) {
+      setTimeout(() => {
+        setCore42Conversation((prev) => prev.slice(0, -1));
+      }, 4000);
+    }
+  }, [isLimit]);
 
   const handleKeyDown = (e) => {
     if (e.key === "Enter" && inputMessage.trim() !== "") {
@@ -163,7 +162,7 @@ export default function Core42() {
 
       <div
         id="chat_container"
-        className={`z-30 px-3  xl:w-[52%] lg:w-[62%] md:w-[72%] sm:w-[82%] w-full
+        className={`z-30 px-3 xl:w-[52%] lg:w-[62%] md:w-[72%] sm:w-[82%] w-full
     ${
       core42Conversation.length > 0
         ? `bottom-0 fixed  translate-x-[-50%] left-[50%]`
@@ -237,7 +236,7 @@ export default function Core42() {
             id="send_message"
             title={`${inputMessage ? "أرسل رسالة" : "الرسالة فارغة"}`}
             onClick={handleInputMessage}
-            disabled={!inputMessage}
+            disabled={!inputMessage && isLimit}
             className="absolute left-0 top-[50%] disabled:cursor-default disabled:text-gray-400 text-black translate-y-[-50%] ml-4"
           >
             <CiLocationArrow1 size={45} className=" py-2 px-2" />
@@ -248,7 +247,7 @@ export default function Core42() {
           id="info"
           className={`${
             core42Conversation.length > 0 ? "fixed block" : "hidden"
-          } w-full bottom-[-1px] h-[30px] left-0`}
+          } w-full bottom-[-1px] h-[30px] left-0 bg-[#1D232A]`}
         >
           <p
             className={`absolute w-full left-[50%] translate-x-[-50%] top-[50%] translate-y-[-50%] text-[#B4B4B4] text-center text-xs`}

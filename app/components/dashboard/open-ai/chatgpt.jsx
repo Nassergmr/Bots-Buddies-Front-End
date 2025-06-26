@@ -16,6 +16,7 @@ export default function Chatgpt() {
     setChatgptConversation,
     isLoaded,
     setIsLoaded,
+    isLimit,
   } = useContext(MyContext);
 
   const [userMessage, setUserMessage] = useState("");
@@ -26,13 +27,6 @@ export default function Chatgpt() {
 
   useEffect(() => {
     setBodyColor("#212121");
-  }, []);
-
-  // Fix a ui issue
-  useEffect(() => {
-    setTimeout(() => {
-      info.style.backgroundColor = "#212121";
-    }, 500);
   }, []);
 
   // Await page content until page loads (in case user refresh page)
@@ -74,12 +68,12 @@ export default function Chatgpt() {
 
   useEffect(() => {
     if (process.env.NODE_ENV === "development") {
-      console.log("Core42 Conversation:", chatgptConversation);
+      console.log("Chatgpt Conversation:", chatgptConversation);
     }
   }, [chatgptConversation]);
 
   const handleInputMessage = () => {
-    if (inputMessage.trim() !== "") {
+    if (inputMessage.trim() !== "" && !isLimit) {
       inputRef.current?.blur(); // hide the keyboard when message is sent (on mobile)
       setUserMessage(inputMessage);
       sendChatgptUserMessage(inputMessage); // Send The User Message To Chatgpt Api
@@ -89,12 +83,22 @@ export default function Chatgpt() {
         ...prev,
         { text: inputMessage, animate: false, isloading: true },
       ]);
+
       // scroll exactly to bottom
       setTimeout(() => {
         scrollToBottom();
       }, 0);
     }
   };
+
+  // Remove last object from the array when limit is reached
+  useEffect(() => {
+    if (isLimit) {
+      setTimeout(() => {
+        setChatgptConversation((prev) => prev.slice(0, -1));
+      }, 4000);
+    }
+  }, [isLimit]);
 
   const handleKeyDown = (e) => {
     if (e.key === "Enter" && inputMessage.trim() !== "") {
@@ -197,7 +201,7 @@ export default function Chatgpt() {
             id="send_message"
             title={`${inputMessage ? "Send message" : "Message is empty"}`}
             onClick={handleInputMessage}
-            disabled={!inputMessage}
+            disabled={!inputMessage || isLimit}
             className="absolute rounded-full right-0 top-[50%] disabled:cursor-default disabled:text-[#2f2f2f] disabled:bg-[#676767] text-black bg-white hover:bg-[#C1C1C1] translate-y-[-50%] mr-4"
           >
             <FaArrowUp size={33} className=" py-2 px-2" />
@@ -208,7 +212,7 @@ export default function Chatgpt() {
           id="info"
           className={`${
             chatgptConversation.length > 0 ? "fixed block" : "hidden"
-          } w-full bottom-[-1px] h-[30px] left-0`}
+          } w-full bottom-[-1px] h-[30px] left-0 bg-[#212121]`}
         >
           <p
             className={`absolute w-full left-[50%] translate-x-[-50%] top-[50%] translate-y-[-50%] text-[#B4B4B4] text-center text-xs`}

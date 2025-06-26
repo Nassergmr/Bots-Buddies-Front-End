@@ -17,6 +17,7 @@ export default function XAi() {
     setXAiConversation,
     isLoaded,
     setIsLoaded,
+    isLimit,
   } = useContext(MyContext);
 
   const [userMessage, setUserMessage] = useState("");
@@ -27,13 +28,6 @@ export default function XAi() {
 
   useEffect(() => {
     setBodyColor("#151718");
-  }, []);
-
-  // Fix a ui issue
-  useEffect(() => {
-    setTimeout(() => {
-      info.style.backgroundColor = "#151718";
-    }, 500);
   }, []);
 
   // Await page content until page loads (in case user refresh page)
@@ -74,17 +68,13 @@ export default function XAi() {
   }, []);
 
   useEffect(() => {
-    scrollToBottom();
-  }, [xAiConversation]);
-
-  useEffect(() => {
     if (process.env.NODE_ENV === "development") {
       console.log("Core42 Conversation:", xAiConversation);
     }
   }, [xAiConversation]);
 
   const handleInputMessage = () => {
-    if (inputMessage.trim() !== "") {
+    if (inputMessage.trim() !== "" && !isLimit) {
       inputRef.current?.blur(); // hide the keyboard when message is sent (on mobile)
       setUserMessage(inputMessage);
       sendXAiUserMessage(inputMessage); // Send The User Message To Chatgpt Api
@@ -100,6 +90,15 @@ export default function XAi() {
       }, 0);
     }
   };
+
+  // Remove last object from the array when limit is reached
+  useEffect(() => {
+    if (isLimit) {
+      setTimeout(() => {
+        setXAiConversation((prev) => prev.slice(0, -1));
+      }, 4000);
+    }
+  }, [isLimit]);
 
   const handleKeyDown = (e) => {
     if (e.key === "Enter" && inputMessage.trim() !== "") {
@@ -212,7 +211,7 @@ export default function XAi() {
             id="send_message"
             title={`${inputMessage ? "Send message" : "Message is empty"}`}
             onClick={handleInputMessage}
-            disabled={!inputMessage}
+            disabled={!inputMessage && isLimit}
             className="absolute rounded-full right-0 top-[50%] disabled:cursor-default disabled:text-[#B5B5B5] disabled:bg-[#3E3F42] text-black bg-[#FCFCFC] hover:bg-[#C1C1C1] translate-y-[-50%] mr-4"
           >
             <FaArrowUp size={38} className=" py-3 px-3" />
@@ -223,7 +222,7 @@ export default function XAi() {
           id="info"
           className={`${
             xAiConversation.length > 0 ? "fixed block" : "hidden"
-          } w-full bottom-[-1px] h-[30px] left-0`}
+          } w-full bottom-[-1px] h-[30px] left-0 bg-[#151718]`}
         >
           <p
             className={`absolute w-full left-[50%] translate-x-[-50%] top-[50%] translate-y-[-50%] text-[#B4B4B4] text-center text-xs`}

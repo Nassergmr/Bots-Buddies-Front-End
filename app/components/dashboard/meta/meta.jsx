@@ -20,6 +20,7 @@ export default function Meta() {
     sendMetaUserMessage,
     isLoaded,
     setIsLoaded,
+    isLimit,
   } = useContext(MyContext);
 
   const [userMessage, setUserMessage] = useState("");
@@ -30,13 +31,6 @@ export default function Meta() {
 
   useEffect(() => {
     setBodyColor("#101112");
-  }, []);
-
-  // Fix a ui issue
-  useEffect(() => {
-    setTimeout(() => {
-      info.style.backgroundColor = "#101112";
-    }, 500);
   }, []);
 
   // Await page content until page loads (in case user refresh page)
@@ -77,17 +71,13 @@ export default function Meta() {
   }, []);
 
   useEffect(() => {
-    scrollToBottom();
-  }, [metaConversation]);
-
-  useEffect(() => {
     if (process.env.NODE_ENV === "development") {
       console.log("Core42 Conversation:", metaConversation);
     }
   }, [metaConversation]);
 
   const handleInputMessage = () => {
-    if (inputMessage.trim() !== "") {
+    if (inputMessage.trim() !== "" && !isLimit) {
       inputRef.current?.blur(); // hide the keyboard when message is sent (on mobile)
       setUserMessage(inputMessage);
       sendMetaUserMessage(inputMessage); // Send The User Message To meta Api
@@ -103,6 +93,15 @@ export default function Meta() {
       }, 0);
     }
   };
+
+  // Remove last object from the array when limit is reached
+  useEffect(() => {
+    if (isLimit) {
+      setTimeout(() => {
+        setMetaConversation((prev) => prev.slice(0, -1));
+      }, 4000);
+    }
+  }, [isLimit]);
 
   const handleKeyDown = (e) => {
     if (e.key === "Enter" && inputMessage.trim() !== "") {
@@ -212,7 +211,7 @@ export default function Meta() {
             id="send_message"
             title={`${inputMessage ? "Send message" : "Message is empty"}`}
             onClick={handleInputMessage}
-            disabled={!inputMessage}
+            disabled={!inputMessage || isLimit}
             className="absolute transition-colors duration-500 ease-in-out rounded-full right-0 top-[50%] disabled:cursor-default disabled:text-[#747476] disabled:bg-[#193669] text-[#FFFFFF] bg-[#2864E0]  translate-y-[-50%] mr-4"
           >
             <FaArrowUp size={35} className="py-2 px-3" />
@@ -222,7 +221,7 @@ export default function Meta() {
           id="info"
           className={`${
             metaConversation.length > 0 ? "fixed block" : "hidden"
-          } w-full bottom-[-1px] h-[30px] left-0`}
+          } w-full bottom-[-1px] h-[30px] left-0 bg-[#101112]`}
         >
           <p
             className={`absolute w-full left-[50%] translate-x-[-50%] top-[50%] translate-y-[-50%] text-[#B4B4B4] text-center text-xs`}

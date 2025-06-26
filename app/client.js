@@ -29,11 +29,31 @@ const getItem = (key) => {
 };
 
 export default function Client({ children }) {
-  const [showOverlay, setShowOverlay] = useState(false);
-  const socketRef = useRef(null);
   const [animated, setAnimated] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [isLimit, setIsLimit] = useState(false);
+  const socketRef = useRef(null);
   const path = usePathname();
+
+  useEffect(() => {
+    if (isLimit) {
+      toast(
+        <div className="flex flex-col gap-3 text-center">
+          <FaExclamationCircle size={32} className="mx-auto text-red-600" />
+          <div>Daily rate limit reached for this model, retry later</div>
+          {path.includes("core") && (
+            <div>
+              تم الوصول إلى الحد الأقصى للسعر اليومي لهذا النموذج، أعد المحاولة
+              لاحقًا
+            </div>
+          )}
+        </div>,
+        {
+          className: "custom-toast",
+        }
+      );
+    }
+  }, [isLimit]);
 
   // Chatgpt
   const [chatgptMessage, setChatgptMessage] = useState("");
@@ -206,7 +226,7 @@ export default function Client({ children }) {
   useEffect(() => {
     // Creating a socket instance and connecting to the WebSocket server
     const socketUrl =
-      process.env.NEXT_PUBLIC_SOCKET_URL || "http://localhost:3001";
+      "http://localhost:3001" || process.env.NEXT_PUBLIC_SOCKET_URL;
     socketRef.current = io(socketUrl);
 
     // Event listener for successful connection to the server
@@ -220,7 +240,6 @@ export default function Client({ children }) {
 
     // Receive ChatGPT Response From The Server And Push It To The Conversation Array
     socketRef.current.on("chatgpt_conversation", (ChatGptmessage) => {
-      console.log("chatgpt response:", ChatGptmessage);
       setChatgptMessage(ChatGptmessage);
       setChatgptConversation((prev) =>
         prev
@@ -238,7 +257,6 @@ export default function Client({ children }) {
 
     // Receive Meta Response From The Server And Push It To The Conversation Array
     socketRef.current.on("meta_conversation", (MetaMessage) => {
-      console.log("meta response:", MetaMessage);
       setMetaMessage(MetaMessage);
       setMetaConversation((prev) =>
         prev
@@ -256,7 +274,6 @@ export default function Client({ children }) {
 
     // Receive Microsoft Response From The Server And Push It To The Conversation Array
     socketRef.current.on("microsoft_conversation", (MicrosoftMessage) => {
-      console.log("microsoft response:", MicrosoftMessage);
       setMicrosoftMessage(MicrosoftMessage);
       setMicrosoftConversation((prev) =>
         prev
@@ -274,7 +291,6 @@ export default function Client({ children }) {
 
     // Receive XAi Response From The Server And Push It To The Conversation Array
     socketRef.current.on("xai_conversation", (XAiMessage) => {
-      console.log("XAi response:", XAiMessage);
       setXAiMessage(XAiMessage);
       setXAiConversation((prev) =>
         prev
@@ -292,7 +308,6 @@ export default function Client({ children }) {
 
     // Receive Core42 Response From The Server And Push It To The Conversation Array
     socketRef.current.on("core42_conversation", (Core42Message) => {
-      console.log("Core42 response:", Core42Message);
       setCore42Message(Core42Message);
       setCore42Conversation((prev) =>
         prev
@@ -310,22 +325,10 @@ export default function Client({ children }) {
 
     // Alert for the rate limit error (ex: 50 requests a day)
     socketRef.current.on("rate_limit_exceeded", () => {
-      toast(
-        <div className="flex flex-col gap-3 text-center">
-          <FaExclamationCircle size={32} className="mx-auto text-red-600" />
-          <div>Daily rate limit reached for this model, retry later</div>
-        </div>,
-        {
-          position: "top-center",
-          autoClose: false,
-          closeOnClick: false,
-          draggable: false,
-          theme: "light",
-          transition: Zoom,
-          closeButton: true,
-          className: "custom-toast",
-        }
-      );
+      setIsLimit(true);
+      setTimeout(() => {
+        setIsLimit(false);
+      }, 5000);
     });
 
     socketRef.current.on("disconnect", (reason) => {
@@ -347,6 +350,7 @@ export default function Client({ children }) {
         chatgptConversation,
         setChatgptConversation,
         sendChatgptUserMessage,
+        isLimit,
         // Meta
         metaConversation,
         setMetaConversation,
@@ -368,15 +372,16 @@ export default function Client({ children }) {
       {/* Alert the user of rate limit */}
       <ToastContainer
         position="top-center"
-        autoClose={false}
+        autoClose={3000}
         newestOnTop={false}
-        closeOnClick={false}
+        closeOnClick={true}
         rtl={false}
         pauseOnFocusLoss={false}
         draggable={false}
-        theme="light"
+        theme="dark"
         transition={Zoom}
         closeButton={false}
+        pauseOnHover={false}
       />
       {children}
     </MyContext.Provider>
