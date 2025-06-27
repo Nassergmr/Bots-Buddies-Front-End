@@ -225,8 +225,7 @@ export default function Client({ children }) {
 
   useEffect(() => {
     // Creating a socket instance and connecting to the WebSocket server
-    const socketUrl =
-      "http://localhost:3001" || process.env.NEXT_PUBLIC_SOCKET_URL;
+    const socketUrl = process.env.NEXT_PUBLIC_SOCKET_URL;
     socketRef.current = io(socketUrl);
 
     // Event listener for successful connection to the server

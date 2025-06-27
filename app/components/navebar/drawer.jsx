@@ -80,6 +80,7 @@ export default function Drawer({
             height={95}
             alt=""
             className="z-10"
+            priority
           />
         </Link>
 
