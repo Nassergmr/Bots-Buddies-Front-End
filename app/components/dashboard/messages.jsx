@@ -56,7 +56,7 @@ export default function Messages({
                 id="user_message_container"
                 className="sm:max-w-[65%] max-w-[75%] ml-auto break-words whitespace-normal my-8"
               >
-                <p className="rounded-3xl bg-[#2F2F2F] px-5 py-[10px] w-fit max-w-[100%] ml-auto">
+                <p className="rounded-3xl bg-[#2F2F2F] px-5 py-[10px] w-fit max-w-[100%] ml-auto text-pretty">
                   {mssg.text}
                 </p>
               </div>
@@ -75,7 +75,7 @@ export default function Messages({
 
             {/* Chatgpt Response */}
             {mssg.isai && (
-              <span className="leading-relaxed">
+              <span className="leading-relaxed text-pretty">
                 {/*  */}
                 {mssg.animate ? (
                   <TypeWriter text={mssg.text} delay={0.3} infinite />

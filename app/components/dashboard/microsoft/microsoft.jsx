@@ -29,6 +29,12 @@ export default function Microsoft() {
     setBodyColor("#101524");
   }, []);
 
+  useEffect(() => {
+    setTimeout(() => {
+      info.style.backgroundColor = "#101524";
+    }, 500);
+  }, []);
+
   // Await page content until page loads (in case user refresh page)
   useEffect(() => {
     if (window.performance && window.performance.navigation.type === 1) {
@@ -105,10 +111,14 @@ export default function Microsoft() {
     }
   };
 
-  // Scoll To Bottom On Button Click
+  // Scoll To Bottom
   const scrollToBottom = () => {
     window.scrollTo({ top: document.body.scrollHeight });
   };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, []);
 
   // Auto Scroll To Latest Message
   const scrollToBottomMessages = () => {
@@ -152,7 +162,7 @@ export default function Microsoft() {
       {/* Area Placeholder (make some space above input area) */}
       <div
         id="area_placeholder"
-        className="w-full bg-inherit h-[200px] relative"
+        className="w-full bg-inherit h-[300px] relative"
         style={{ display: microsoftConversation.length > 0 ? "block" : "none" }}
       ></div>
 
@@ -225,7 +235,7 @@ export default function Microsoft() {
           id="info"
           className={`${
             microsoftConversation.length > 0 ? "fixed block" : "hidden"
-          } w-full bottom-[-1px] h-[30px] text-[#E0CEBF] left-0 bg-[#101524]`}
+          } w-full bottom-[-1px] h-[30px] text-[#E0CEBF] left-0`}
         >
           <p
             className={`absolute w-full left-[50%] translate-x-[-50%] top-[50%] translate-y-[-50%] text-[#B4B4B4] text-center text-xs`}

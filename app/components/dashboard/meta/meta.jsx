@@ -33,6 +33,12 @@ export default function Meta() {
     setBodyColor("#101112");
   }, []);
 
+  useEffect(() => {
+    setTimeout(() => {
+      info.style.backgroundColor = "#101112";
+    }, 500);
+  }, []);
+
   // Await page content until page loads (in case user refresh page)
   useEffect(() => {
     if (window.performance && window.performance.navigation.type === 1) {
@@ -109,10 +115,14 @@ export default function Meta() {
     }
   };
 
-  // Scoll To Buttom On Button Click
+  // Scroll To Bottom
   const scrollToBottom = () => {
     window.scrollTo({ top: document.body.scrollHeight });
   };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, []);
 
   // Auto Scroll To Latest Message
   const scrollToBottomMessages = () => {
@@ -156,7 +166,7 @@ export default function Meta() {
       {/* Area Placeholder (make some space above input area) */}
       <div
         id="area_placeholder"
-        className="w-full bg-inherit h-[200px] relative"
+        className="w-full bg-inherit h-[300px] relative"
         style={{ display: metaConversation.length > 0 ? "block" : "none" }}
       ></div>
 
@@ -221,7 +231,7 @@ export default function Meta() {
           id="info"
           className={`${
             metaConversation.length > 0 ? "fixed block" : "hidden"
-          } w-full bottom-[-1px] h-[30px] left-0 bg-[#101112]`}
+          } w-full bottom-[-1px] h-[30px] left-0`}
         >
           <p
             className={`absolute w-full left-[50%] translate-x-[-50%] top-[50%] translate-y-[-50%] text-[#B4B4B4] text-center text-xs`}

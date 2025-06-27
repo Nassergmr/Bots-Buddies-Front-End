@@ -33,6 +33,12 @@ export default function Core42() {
     setBodyColor("#1D232A");
   }, []);
 
+  useEffect(() => {
+    setTimeout(() => {
+      info.style.backgroundColor = "#1D232A";
+    }, 500);
+  }, []);
+
   // Await page content until page loads (in case user refresh page)
   useEffect(() => {
     if (window.performance && window.performance.navigation.type === 1) {
@@ -109,10 +115,14 @@ export default function Core42() {
     }
   };
 
-  // Scoll To Buttom On Button Click
+  // Scroll To Bottom
   const scrollToBottom = () => {
     window.scrollTo({ top: document.body.scrollHeight });
   };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, []);
 
   // Auto Scroll To Latest Message
   const scrollToBottomMessages = () => {
@@ -247,7 +257,7 @@ export default function Core42() {
           id="info"
           className={`${
             core42Conversation.length > 0 ? "fixed block" : "hidden"
-          } w-full bottom-[-1px] h-[30px] left-0 bg-[#1D232A]`}
+          } w-full bottom-[-1px] h-[30px] left-0`}
         >
           <p
             className={`absolute w-full left-[50%] translate-x-[-50%] top-[50%] translate-y-[-50%] text-[#B4B4B4] text-center text-xs`}
