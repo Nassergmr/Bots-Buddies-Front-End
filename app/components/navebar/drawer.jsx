@@ -35,7 +35,7 @@ export default function Drawer({
           className={`cool_button mt-12 !w-full !py-4  ${
             path.includes("open-ai") && buttonActive ? "clicked" : ""
           }`}
-          href={"/bots/open-ai"}
+          href={"/models/open-ai"}
           id="open-ai"
         >
           <Image
@@ -53,7 +53,7 @@ export default function Drawer({
           className={`cool_button liberationText !w-full !py-4 ${
             path.includes("meta") && buttonActive ? "clicked" : ""
           }`}
-          href={"/bots/meta"}
+          href={"/models/meta"}
           id="meta"
         >
           <Image
@@ -68,7 +68,7 @@ export default function Drawer({
 
         <Link
           onClick={() => setOpenDrawer(false)}
-          href={"/bots/core42"}
+          href={"/models/core42"}
           id="Core42"
           className={`cool_button !w-full !py-4 ${
             path.includes("core42") && buttonActive ? "clicked" : ""
@@ -88,7 +88,7 @@ export default function Drawer({
           className={`cool_button gintoText !w-full !py-4 ${
             path.includes("microsoft") && buttonActive ? "clicked" : ""
           }`}
-          href={"/bots/microsoft"}
+          href={"/models/microsoft"}
           id="microsoft"
         >
           <Image
@@ -103,7 +103,7 @@ export default function Drawer({
 
         <Link
           onClick={() => setOpenDrawer(false)}
-          href={"/bots/xai"}
+          href={"/models/xai"}
           id="xai"
           className={`cool_button manropeText !w-full !py-4 ${
             path.includes("xai") && buttonActive ? "clicked" : ""

@@ -211,7 +211,7 @@ export default function XAi() {
             id="send_message"
             title={`${inputMessage ? "Send message" : "Message is empty"}`}
             onClick={handleInputMessage}
-            disabled={!inputMessage && isLimit}
+            disabled={!inputMessage || isLimit}
             className="absolute rounded-full right-0 top-[50%] disabled:cursor-default disabled:text-[#B5B5B5] disabled:bg-[#3E3F42] text-black bg-[#FCFCFC] hover:bg-[#C1C1C1] translate-y-[-50%] mr-4"
           >
             <FaArrowUp size={38} className=" py-3 px-3" />

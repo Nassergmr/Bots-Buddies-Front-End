@@ -236,7 +236,7 @@ export default function Core42() {
             id="send_message"
             title={`${inputMessage ? "أرسل رسالة" : "الرسالة فارغة"}`}
             onClick={handleInputMessage}
-            disabled={!inputMessage && isLimit}
+            disabled={!inputMessage || isLimit}
             className="absolute left-0 top-[50%] disabled:cursor-default disabled:text-gray-400 text-black translate-y-[-50%] ml-4"
           >
             <CiLocationArrow1 size={45} className=" py-2 px-2" />

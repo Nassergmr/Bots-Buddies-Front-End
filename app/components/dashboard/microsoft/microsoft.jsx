@@ -212,7 +212,7 @@ export default function Microsoft() {
             id="send_message"
             title={`${inputMessage ? "Send message" : "Message is empty"}`}
             onClick={handleInputMessage}
-            disabled={!inputMessage && isLimit}
+            disabled={!inputMessage || isLimit}
             style={{ display: !inputMessage ? "none" : "block" }}
             className="absolute rounded-lg right-0 top-[50%]  text-[#E3CBBC] hover:bg-[#505B7B] bg-[#455172] translate-y-[-50%] mr-4"
           >
