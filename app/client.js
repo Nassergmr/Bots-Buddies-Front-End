@@ -32,28 +32,9 @@ export default function Client({ children }) {
   const [animated, setAnimated] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
   const [isLimit, setIsLimit] = useState(false);
+  const [isError, setIsError] = useState(false);
   const socketRef = useRef(null);
   const path = usePathname();
-
-  useEffect(() => {
-    if (isLimit) {
-      toast(
-        <div className="flex flex-col gap-3 text-center">
-          <FaExclamationCircle size={32} className="mx-auto text-red-600" />
-          <div>Daily rate limit reached for this model, retry later</div>
-          {path.includes("core") && (
-            <div>
-              تم الوصول إلى الحد الأقصى للسعر اليومي لهذا النموذج، أعد المحاولة
-              لاحقًا
-            </div>
-          )}
-        </div>,
-        {
-          className: "custom-toast",
-        }
-      );
-    }
-  }, [isLimit]);
 
   // Chatgpt
   const [chatgptMessage, setChatgptMessage] = useState("");
@@ -74,6 +55,42 @@ export default function Client({ children }) {
   // Core42
   const [core42Message, setCore42Message] = useState("");
   const [core42Conversation, setCore42Conversation] = useState([]);
+
+  // Handle errors on client side
+  useEffect(() => {
+    if (isLimit) {
+      toast(
+        <div className="flex flex-col gap-3 text-center">
+          <FaExclamationCircle size={32} className="mx-auto text-red-600" />
+          <div>Daily rate limit reached for this model, retry later</div>
+          {path.includes("core") && (
+            <div>
+              تم الوصول إلى الحد الأقصى للسعر اليومي لهذا النموذج، أعد المحاولة
+              لاحقًا
+            </div>
+          )}
+        </div>,
+        {
+          className: "custom-toast",
+        }
+      );
+    }
+  }, [isLimit]);
+
+  useEffect(() => {
+    if (isError) {
+      toast(
+        <div className="flex flex-col gap-3 text-center">
+          <FaExclamationCircle size={32} className="mx-auto text-red-600" />
+          <div>Something went wrong, try again</div>
+          {path.includes("core") && <div>حدث خطأ ما، حاول مرة أخرى</div>}
+        </div>,
+        {
+          className: "custom-toast",
+        }
+      );
+    }
+  }, [isError]);
 
   /* Get From LocalStorage */
   // Chatgpt
@@ -225,8 +242,7 @@ export default function Client({ children }) {
 
   useEffect(() => {
     // Creating a socket instance and connecting to the WebSocket server
-    const socketUrl =
-      process.env.NEXT_PUBLIC_SOCKET_URL || "http://localhost:3001";
+    const socketUrl = process.env.NEXT_PUBLIC_SOCKET_URL;
     socketRef.current = io(socketUrl);
 
     // Event listener for successful connection to the server
@@ -323,11 +339,18 @@ export default function Client({ children }) {
       );
     });
 
-    // Alert for the rate limit error (ex: 50 requests a day)
+    // Alert for the rate limit error (ex: 50 requests a day) and any error
     socketRef.current.on("rate_limit_exceeded", () => {
       setIsLimit(true);
       setTimeout(() => {
         setIsLimit(false);
+      }, 5000);
+    });
+
+    socketRef.current.on("error", () => {
+      setIsError(true);
+      setTimeout(() => {
+        setIsError(false);
       }, 5000);
     });
 
@@ -346,11 +369,12 @@ export default function Client({ children }) {
         isLoaded,
         setIsLoaded,
         socketRef,
+        isLimit,
+        isError,
         // Chatgpt
         chatgptConversation,
         setChatgptConversation,
         sendChatgptUserMessage,
-        isLimit,
         // Meta
         metaConversation,
         setMetaConversation,
@@ -369,7 +393,6 @@ export default function Client({ children }) {
         sendCore42UserMessage,
       }}
     >
-      {/* Alert the user of rate limit */}
       <ToastContainer
         position="top-center"
         autoClose={3000}

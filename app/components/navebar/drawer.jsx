@@ -45,7 +45,7 @@ export default function Drawer({
             alt=""
             className="z-10"
           />
-          <span>Open Ai</span>
+          <span>OpenAI</span>
         </Link>
 
         <Link

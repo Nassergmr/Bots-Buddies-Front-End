@@ -21,6 +21,7 @@ export default function Core42() {
     isLoaded,
     setIsLoaded,
     isLimit,
+    isError,
   } = useContext(MyContext);
 
   const [userMessage, setUserMessage] = useState("");
@@ -83,7 +84,7 @@ export default function Core42() {
   }, [core42Conversation]);
 
   const handleInputMessage = () => {
-    if (inputMessage.trim() !== "" && !isLimit) {
+    if (inputMessage.trim() !== "" && !isLimit && !isError) {
       inputRef.current?.blur(); // hide the keyboard when message is sent (on mobile)
       setUserMessage(inputMessage);
       sendCore42UserMessage(inputMessage); // Send The User Message To Core42 Api
@@ -102,12 +103,12 @@ export default function Core42() {
 
   // Remove last object from the array when limit is reached
   useEffect(() => {
-    if (isLimit) {
+    if (isLimit || isError) {
       setTimeout(() => {
         setCore42Conversation((prev) => prev.slice(0, -1));
       }, 4000);
     }
-  }, [isLimit]);
+  }, [isLimit, isError]);
 
   const handleKeyDown = (e) => {
     if (e.key === "Enter" && inputMessage.trim() !== "") {

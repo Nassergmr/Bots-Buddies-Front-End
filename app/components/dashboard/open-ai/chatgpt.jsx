@@ -17,6 +17,7 @@ export default function Chatgpt() {
     isLoaded,
     setIsLoaded,
     isLimit,
+    isError,
   } = useContext(MyContext);
 
   const [userMessage, setUserMessage] = useState("");
@@ -79,7 +80,7 @@ export default function Chatgpt() {
   }, [chatgptConversation]);
 
   const handleInputMessage = () => {
-    if (inputMessage.trim() !== "" && !isLimit) {
+    if (inputMessage.trim() !== "" && !isLimit && !isError) {
       inputRef.current?.blur(); // hide the keyboard when message is sent (on mobile)
       setUserMessage(inputMessage);
       sendChatgptUserMessage(inputMessage); // Send The User Message To Chatgpt Api
@@ -99,12 +100,12 @@ export default function Chatgpt() {
 
   // Remove last object from the array when limit is reached
   useEffect(() => {
-    if (isLimit) {
+    if (isLimit || isError) {
       setTimeout(() => {
         setChatgptConversation((prev) => prev.slice(0, -1));
       }, 4000);
     }
-  }, [isLimit]);
+  }, [isLimit, isError]);
 
   const handleKeyDown = (e) => {
     if (e.key === "Enter" && inputMessage.trim() !== "") {
@@ -199,7 +200,7 @@ export default function Chatgpt() {
 
           {/* Input */}
           <input
-            placeholder="Ask GPT-4"
+            placeholder="Ask GPT-4.1"
             value={inputMessage}
             onKeyDown={handleKeyDown}
             onChange={(e) => setInputMessage(e.target.value)}

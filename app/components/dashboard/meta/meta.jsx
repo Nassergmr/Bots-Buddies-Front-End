@@ -21,6 +21,7 @@ export default function Meta() {
     isLoaded,
     setIsLoaded,
     isLimit,
+    isError,
   } = useContext(MyContext);
 
   const [userMessage, setUserMessage] = useState("");
@@ -78,12 +79,12 @@ export default function Meta() {
 
   useEffect(() => {
     if (process.env.NODE_ENV === "development") {
-      console.log("Core42 Conversation:", metaConversation);
+      console.log("Meta Conversation:", metaConversation);
     }
   }, [metaConversation]);
 
   const handleInputMessage = () => {
-    if (inputMessage.trim() !== "" && !isLimit) {
+    if (inputMessage.trim() !== "" && !isLimit && !isError) {
       inputRef.current?.blur(); // hide the keyboard when message is sent (on mobile)
       setUserMessage(inputMessage);
       sendMetaUserMessage(inputMessage); // Send The User Message To meta Api
@@ -102,12 +103,12 @@ export default function Meta() {
 
   // Remove last object from the array when limit is reached
   useEffect(() => {
-    if (isLimit) {
+    if (isLimit || isError) {
       setTimeout(() => {
         setMetaConversation((prev) => prev.slice(0, -1));
       }, 4000);
     }
-  }, [isLimit]);
+  }, [isLimit, isError]);
 
   const handleKeyDown = (e) => {
     if (e.key === "Enter" && inputMessage.trim() !== "") {
@@ -209,7 +210,7 @@ export default function Meta() {
           </button>
           {/* Input */}
           <input
-            placeholder="Ask Llama 3 Scout 13B 16E Instruct"
+            placeholder="Ask Meta-Llama-3-8B-Instruct"
             value={inputMessage}
             onKeyDown={handleKeyDown}
             onChange={(e) => setInputMessage(e.target.value)}

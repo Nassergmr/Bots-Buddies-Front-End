@@ -18,6 +18,7 @@ export default function XAi() {
     isLoaded,
     setIsLoaded,
     isLimit,
+    isError,
   } = useContext(MyContext);
 
   const [userMessage, setUserMessage] = useState("");
@@ -75,12 +76,12 @@ export default function XAi() {
 
   useEffect(() => {
     if (process.env.NODE_ENV === "development") {
-      console.log("Core42 Conversation:", xAiConversation);
+      console.log("XAI Conversation:", xAiConversation);
     }
   }, [xAiConversation]);
 
   const handleInputMessage = () => {
-    if (inputMessage.trim() !== "" && !isLimit) {
+    if (inputMessage.trim() !== "" && !isLimit && !isError) {
       inputRef.current?.blur(); // hide the keyboard when message is sent (on mobile)
       setUserMessage(inputMessage);
       sendXAiUserMessage(inputMessage); // Send The User Message To Chatgpt Api
@@ -99,12 +100,12 @@ export default function XAi() {
 
   // Remove last object from the array when limit is reached
   useEffect(() => {
-    if (isLimit) {
+    if (isLimit || isError) {
       setTimeout(() => {
         setXAiConversation((prev) => prev.slice(0, -1));
       }, 4000);
     }
-  }, [isLimit]);
+  }, [isLimit, isError]);
 
   const handleKeyDown = (e) => {
     if (e.key === "Enter" && inputMessage.trim() !== "") {

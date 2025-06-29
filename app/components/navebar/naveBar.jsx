@@ -83,7 +83,7 @@ export default function NaveBar() {
             <Link
               href={"/models/core42"}
               id="Core42"
-              className={`cool_button ${
+              className={`cool_button !max-h-[50px] ${
                 path.includes("core") && buttonActive ? "clicked" : ""
               }`}
             >
