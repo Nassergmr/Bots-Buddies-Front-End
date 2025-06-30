@@ -5,19 +5,22 @@ import Image from "next/image";
 import { MyContext } from "../../../client";
 import { FaArrowUp } from "react-icons/fa6";
 import { FaArrowDown } from "react-icons/fa6";
+import { MdSquare } from "react-icons/md";
 import Messages from "../messages";
 import ResetButton from "../../../assets/reset.png";
 import setBodyColor from "../../elements/bodyColor";
 
 export default function Chatgpt() {
   const {
-    sendChatgptUserMessage,
+    handleSendChatgptUserMessage,
     chatgptConversation,
     setChatgptConversation,
     isLoaded,
     setIsLoaded,
     isLimit,
     isError,
+    chatgptMssgGenerated,
+    setChatgptMssgGenerated,
   } = useContext(MyContext);
 
   const [userMessage, setUserMessage] = useState("");
@@ -46,6 +49,10 @@ export default function Chatgpt() {
   useEffect(() => {
     setIsLoaded(true);
   }, []);
+
+  useEffect(() => {
+    console.log(chatgptMssgGenerated);
+  }, [chatgptMssgGenerated]);
 
   // Scroll To Bottom
   useEffect(() => {
@@ -83,7 +90,8 @@ export default function Chatgpt() {
     if (inputMessage.trim() !== "" && !isLimit && !isError) {
       inputRef.current?.blur(); // hide the keyboard when message is sent (on mobile)
       setUserMessage(inputMessage);
-      sendChatgptUserMessage(inputMessage); // Send The User Message To Chatgpt Api
+      handleSendChatgptUserMessage(inputMessage); // Send The User Message To Chatgpt Api
+      setChatgptMssgGenerated(false);
       setInputMessage("");
       setChatgptConversation((prev) => [
         // Push The User Message To The Conversation Array
@@ -108,8 +116,10 @@ export default function Chatgpt() {
   }, [isLimit, isError]);
 
   const handleKeyDown = (e) => {
-    if (e.key === "Enter" && inputMessage.trim() !== "") {
-      handleInputMessage();
+    if (chatgptMssgGenerated) {
+      if (e.key === "Enter" && inputMessage.trim() !== "") {
+        handleInputMessage();
+      }
     }
   };
 
@@ -135,12 +145,15 @@ export default function Chatgpt() {
       >
         {/* Reset button */}
         <div
-          className={`fixed left-1/2 -translate-x-1/2 top-[16px] lg:z-10 z-[50] lg:left-auto lg:right-0 lg:top-[100px] xl:right-[40px] 
+          className={`fixed left-1/2 -translate-x-1/2 top-[15px] lg:z-10 z-[50] lg:left-auto lg:right-0 lg:top-[100px] xl:right-[40px] 
             ${chatgptConversation.length > 0 ? "block" : "hidden"}`}
         >
           <button
             className="text-white cool_button !w-auto !text-base !p-3"
-            onClick={() => setChatgptConversation([])}
+            onClick={() => {
+              setChatgptConversation([]);
+              setChatgptMssgGenerated(true);
+            }}
           >
             <Image
               src={ResetButton}
@@ -210,12 +223,22 @@ export default function Chatgpt() {
           {/* Send Message Button */}
           <button
             id="send_message"
-            title={`${inputMessage ? "Send message" : "Message is empty"}`}
+            title={`${
+              !chatgptMssgGenerated
+                ? "Generating..."
+                : inputMessage
+                ? "Send message"
+                : "Message is empty"
+            }`}
             onClick={handleInputMessage}
-            disabled={!inputMessage || isLimit}
+            disabled={!inputMessage || isLimit || !chatgptMssgGenerated}
             className="absolute rounded-full right-0 top-[50%] disabled:cursor-default disabled:text-[#2f2f2f] disabled:bg-[#676767] text-black bg-white hover:bg-[#C1C1C1] translate-y-[-50%] mr-4"
           >
-            <FaArrowUp size={33} className=" py-2 px-2" />
+            {chatgptMssgGenerated ? (
+              <FaArrowUp size={35} className="p-2" />
+            ) : (
+              <MdSquare size={35} className="p-2" />
+            )}
           </button>
         </div>
         {/* Info Sentence */}

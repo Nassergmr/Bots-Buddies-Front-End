@@ -6,6 +6,7 @@ import { MyContext } from "../../../client";
 import { FaArrowUp } from "react-icons/fa6";
 import { FaArrowDown } from "react-icons/fa6";
 import { IoIosArrowDown } from "react-icons/io";
+import { MdSquare } from "react-icons/md";
 import Messages from "../messages";
 import LottieComponent from "./lottieComponent";
 import ResetButton from "../../../assets/reset.png";
@@ -17,11 +18,13 @@ export default function Meta() {
     metaConversation,
     setMetaMessage,
     setMetaConversation,
-    sendMetaUserMessage,
+    handleSendMetaUserMessage,
     isLoaded,
     setIsLoaded,
     isLimit,
     isError,
+    metaMssgGenerated,
+    setMetaMssgGenerated,
   } = useContext(MyContext);
 
   const [userMessage, setUserMessage] = useState("");
@@ -87,7 +90,8 @@ export default function Meta() {
     if (inputMessage.trim() !== "" && !isLimit && !isError) {
       inputRef.current?.blur(); // hide the keyboard when message is sent (on mobile)
       setUserMessage(inputMessage);
-      sendMetaUserMessage(inputMessage); // Send The User Message To meta Api
+      handleSendMetaUserMessage(inputMessage); // Send The User Message To meta Api
+      setMetaMssgGenerated(false);
       setInputMessage("");
       setMetaConversation((prev) => [
         // Push The User Message To The Conversation Array
@@ -111,8 +115,10 @@ export default function Meta() {
   }, [isLimit, isError]);
 
   const handleKeyDown = (e) => {
-    if (e.key === "Enter" && inputMessage.trim() !== "") {
-      handleInputMessage();
+    if (metaMssgGenerated) {
+      if (e.key === "Enter" && inputMessage.trim() !== "") {
+        handleInputMessage();
+      }
     }
   };
 
@@ -143,12 +149,15 @@ export default function Meta() {
       >
         {/* Reset button */}
         <div
-          className={`fixed left-1/2 -translate-x-1/2 top-[16px] lg:z-10 z-[50] lg:left-auto lg:right-0 lg:top-[100px] xl:right-[40px] 
+          className={`fixed left-1/2 -translate-x-1/2 top-[15px] lg:z-10 z-[50] lg:left-auto lg:right-0 lg:top-[100px] xl:right-[40px] 
             ${metaConversation.length > 0 ? "block" : "hidden"}`}
         >
           <button
             className="text-white cool_button !w-auto !text-base !p-3"
-            onClick={() => setMetaConversation([])}
+            onClick={() => {
+              setMetaConversation([]);
+              setMetaMssgGenerated(true);
+            }}
           >
             <Image
               src={ResetButton}
@@ -220,12 +229,22 @@ export default function Meta() {
           {/* Send Message Button */}
           <button
             id="send_message"
-            title={`${inputMessage ? "Send message" : "Message is empty"}`}
+            title={`${
+              !metaMssgGenerated
+                ? "Generating..."
+                : inputMessage
+                ? "Send message"
+                : "Message is empty"
+            }`}
             onClick={handleInputMessage}
-            disabled={!inputMessage || isLimit}
+            disabled={!inputMessage || isLimit || !metaMssgGenerated}
             className="absolute transition-colors duration-500 ease-in-out rounded-full right-0 top-[50%] disabled:cursor-default disabled:text-[#747476] disabled:bg-[#193669] text-[#FFFFFF] bg-[#2864E0]  translate-y-[-50%] mr-4"
           >
-            <FaArrowUp size={35} className="py-2 px-3" />
+            {metaMssgGenerated ? (
+              <FaArrowUp size={35} className="py-2 px-3" />
+            ) : (
+              <MdSquare size={35} className="p-2" />
+            )}
           </button>
         </div>
         <div

@@ -4,6 +4,7 @@ import { useState, useContext, useEffect, useRef } from "react";
 import { MyContext } from "../../../client";
 import { FaArrowUp } from "react-icons/fa6";
 import { FaArrowDown } from "react-icons/fa6";
+import { MdSquare } from "react-icons/md";
 import Messages from "../messages";
 import Image from "next/image";
 import groklogo from "../../../assets/grok.png";
@@ -12,13 +13,15 @@ import setBodyColor from "../../elements/bodyColor";
 
 export default function XAi() {
   const {
-    sendXAiUserMessage,
+    handleSendXAiUserMessage,
     xAiConversation,
     setXAiConversation,
     isLoaded,
     setIsLoaded,
     isLimit,
     isError,
+    xaiMssgGenerated,
+    setXaiMssgGenerated,
   } = useContext(MyContext);
 
   const [userMessage, setUserMessage] = useState("");
@@ -84,7 +87,8 @@ export default function XAi() {
     if (inputMessage.trim() !== "" && !isLimit && !isError) {
       inputRef.current?.blur(); // hide the keyboard when message is sent (on mobile)
       setUserMessage(inputMessage);
-      sendXAiUserMessage(inputMessage); // Send The User Message To Chatgpt Api
+      handleSendXAiUserMessage(inputMessage); // Send The User Message To Chatgpt Api
+      setXaiMssgGenerated(false);
       setInputMessage("");
       setXAiConversation((prev) => [
         // Push The User Message To The Conversation Array
@@ -108,8 +112,10 @@ export default function XAi() {
   }, [isLimit, isError]);
 
   const handleKeyDown = (e) => {
-    if (e.key === "Enter" && inputMessage.trim() !== "") {
-      handleInputMessage();
+    if (xaiMssgGenerated) {
+      if (e.key === "Enter" && inputMessage.trim() !== "") {
+        handleInputMessage();
+      }
     }
   };
 
@@ -140,12 +146,15 @@ export default function XAi() {
       >
         {/* Reset button */}
         <div
-          className={`fixed left-1/2 -translate-x-1/2 top-[16px] lg:z-10 z-[50] lg:left-auto lg:right-0 lg:top-[100px] xl:right-[40px] 
+          className={`fixed left-1/2 -translate-x-1/2 top-[15px] lg:z-10 z-[50] lg:left-auto lg:right-0 lg:top-[100px] xl:right-[40px] 
              ${xAiConversation.length > 0 ? "block" : "hidden"}`}
         >
           <button
             className="text-white cool_button !w-auto !text-base !p-3"
-            onClick={() => setXAiConversation([])}
+            onClick={() => {
+              setXAiConversation([]);
+              setXaiMssgGenerated(true);
+            }}
           >
             <Image
               src={ResetButton}
@@ -220,12 +229,22 @@ export default function XAi() {
           {/* Send Message Button */}
           <button
             id="send_message"
-            title={`${inputMessage ? "Send message" : "Message is empty"}`}
+            title={`${
+              !xaiMssgGenerated
+                ? "Generating..."
+                : inputMessage
+                ? "Send message"
+                : "Message is empty"
+            }`}
             onClick={handleInputMessage}
-            disabled={!inputMessage || isLimit}
+            disabled={!inputMessage || isLimit || !xaiMssgGenerated}
             className="absolute rounded-full right-0 top-[50%] disabled:cursor-default disabled:text-[#B5B5B5] disabled:bg-[#3E3F42] text-black bg-[#FCFCFC] hover:bg-[#C1C1C1] translate-y-[-50%] mr-4"
           >
-            <FaArrowUp size={38} className=" py-3 px-3" />
+            {xaiMssgGenerated ? (
+              <FaArrowUp size={38} className="p-3" />
+            ) : (
+              <MdSquare size={38} className="p-3" />
+            )}
           </button>
         </div>
         {/* Info Sentence */}

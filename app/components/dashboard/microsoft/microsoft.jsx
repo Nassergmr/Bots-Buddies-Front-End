@@ -5,6 +5,7 @@ import { useState, useContext, useEffect, useRef } from "react";
 import { MyContext } from "../../../client";
 import { FaArrowUp } from "react-icons/fa6";
 import { FaArrowDown } from "react-icons/fa6";
+import { MdSquare } from "react-icons/md";
 import Messages from "../messages";
 import ResetButton from "../../../assets/reset.png";
 import setBodyColor from "../../elements/bodyColor";
@@ -18,6 +19,8 @@ export default function Microsoft() {
     setIsLoaded,
     isLimit,
     isError,
+    microsoftMssgGenerated,
+    setMicrosoftMssgGenerated,
   } = useContext(MyContext);
 
   const [userMessage, setUserMessage] = useState("");
@@ -84,6 +87,7 @@ export default function Microsoft() {
       inputRef.current?.blur(); // hide the keyboard when message is sent (on mobile)
       setUserMessage(inputMessage);
       sendMicrosoftUserMessage(inputMessage); // Send The User Message To Microsoft Api
+      setMicrosoftMssgGenerated(false);
       setInputMessage("");
       setMicrosoftConversation((prev) => [
         // Push The User Message To The Conversation Array
@@ -107,8 +111,10 @@ export default function Microsoft() {
   }, [isLimit, isError]);
 
   const handleKeyDown = (e) => {
-    if (e.key === "Enter" && inputMessage.trim() !== "") {
-      handleInputMessage();
+    if (microsoftMssgGenerated) {
+      if (e.key === "Enter" && inputMessage.trim() !== "") {
+        handleInputMessage();
+      }
     }
   };
 
@@ -139,12 +145,15 @@ export default function Microsoft() {
       >
         {/* Reset button */}
         <div
-          className={`fixed left-1/2 -translate-x-1/2 top-[16px] lg:z-10 z-[50] lg:left-auto lg:right-0 lg:top-[100px] xl:right-[40px] 
+          className={`fixed left-1/2 -translate-x-1/2 top-[15px] lg:z-10 z-[50] lg:left-auto lg:right-0 lg:top-[100px] xl:right-[40px] 
              ${microsoftConversation.length > 0 ? "block" : "hidden"}`}
         >
           <button
             className="text-white cool_button !w-auto !text-base !p-3"
-            onClick={() => setMicrosoftConversation([])}
+            onClick={() => {
+              setMicrosoftConversation([]);
+              setMicrosoftMssgGenerated(true);
+            }}
           >
             <Image
               src={ResetButton}
@@ -221,13 +230,23 @@ export default function Microsoft() {
           {/* Send Message Button */}
           <button
             id="send_message"
-            title={`${inputMessage ? "Send message" : "Message is empty"}`}
+            title={`${
+              !microsoftMssgGenerated
+                ? "Generating..."
+                : inputMessage
+                ? "Send message"
+                : "Message is empty"
+            }`}
             onClick={handleInputMessage}
-            disabled={!inputMessage || isLimit}
+            disabled={!inputMessage || isLimit || !microsoftMssgGenerated}
             style={{ display: !inputMessage ? "none" : "block" }}
             className="absolute rounded-lg right-0 top-[50%]  text-[#E3CBBC] hover:bg-[#505B7B] bg-[#455172] translate-y-[-50%] mr-4"
           >
-            <FaArrowUp size={34} className=" py-2 px-2" />
+            {microsoftMssgGenerated ? (
+              <FaArrowUp size={35} className="p-2" />
+            ) : (
+              <MdSquare size={35} className="p-2" />
+            )}
           </button>
         </div>
 

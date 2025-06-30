@@ -39,22 +39,27 @@ export default function Client({ children }) {
   // Chatgpt
   const [chatgptMessage, setChatgptMessage] = useState("");
   const [chatgptConversation, setChatgptConversation] = useState([]);
+  const [chatgptMssgGenerated, setChatgptMssgGenerated] = useState(true);
 
   // Meta
   const [metaMessage, setMetaMessage] = useState("");
   const [metaConversation, setMetaConversation] = useState([]);
+  const [metaMssgGenerated, setMetaMssgGenerated] = useState(true);
 
   // Microsoft
   const [microsoftMessage, setMicrosoftMessage] = useState("");
   const [microsoftConversation, setMicrosoftConversation] = useState([]);
+  const [microsoftMssgGenerated, setMicrosoftMssgGenerated] = useState(true);
 
   // XAi
   const [xAiMessage, setXAiMessage] = useState("");
   const [xAiConversation, setXAiConversation] = useState([]);
+  const [xaiMssgGenerated, setXaiMssgGenerated] = useState(true);
 
   // Core42
   const [core42Message, setCore42Message] = useState("");
   const [core42Conversation, setCore42Conversation] = useState([]);
+  const [core42MssgGenerated, setCore42MssgGenerated] = useState(true);
 
   // Handle errors on client side
   useEffect(() => {
@@ -206,14 +211,14 @@ export default function Client({ children }) {
   }, [core42Conversation]);
 
   // Send The Chatgpt User Message to The Server
-  const sendChatgptUserMessage = (message) => {
+  const handleSendChatgptUserMessage = (message) => {
     if (socketRef.current) {
       socketRef.current.emit("chatgpt_conversation", message);
     }
   };
 
   // Send The Meta User Message to The Server
-  const sendMetaUserMessage = (message) => {
+  const handleSendMetaUserMessage = (message) => {
     if (socketRef.current) {
       socketRef.current.emit("meta_conversation", message);
     }
@@ -227,14 +232,14 @@ export default function Client({ children }) {
   };
 
   // Send The XAi User Message to The Server
-  const sendXAiUserMessage = (message) => {
+  const handleSendXAiUserMessage = (message) => {
     if (socketRef.current) {
       socketRef.current.emit("xai_conversation", message);
     }
   };
 
   // Send The Core42 User Message to The Server
-  const sendCore42UserMessage = (message) => {
+  const handleSendCore42UserMessage = (message) => {
     if (socketRef.current) {
       socketRef.current.emit("core42_conversation", message);
     }
@@ -242,7 +247,8 @@ export default function Client({ children }) {
 
   useEffect(() => {
     // Creating a socket instance and connecting to the WebSocket server
-    const socketUrl = process.env.NEXT_PUBLIC_SOCKET_URL;
+    const socketUrl = "http://localhost:3001";
+    //  process.env.NEXT_PUBLIC_SOCKET_URL;
     socketRef.current = io(socketUrl);
 
     // Event listener for successful connection to the server
@@ -339,11 +345,37 @@ export default function Client({ children }) {
       );
     });
 
+    // Let user send message only after ai response is finished generating
+    socketRef.current.on("chatgpt_mssg_generated", () => {
+      setChatgptMssgGenerated(true);
+    });
+
+    socketRef.current.on("meta_mssg_generated", () => {
+      setMetaMssgGenerated(true);
+    });
+
+    socketRef.current.on("microsoft_mssg_generated", () => {
+      setMicrosoftMssgGenerated(true);
+    });
+
+    socketRef.current.on("xai_mssg_generated", () => {
+      setXaiMssgGenerated(true);
+    });
+
+    socketRef.current.on("core42_mssg_generated", () => {
+      setCore42MssgGenerated(true);
+    });
+
     // Alert for the rate limit error (ex: 50 requests a day) and any error
     socketRef.current.on("rate_limit_exceeded", () => {
       setIsLimit(true);
       setTimeout(() => {
         setIsLimit(false);
+        setChatgptMssgGenerated(true);
+        setMetaMssgGenerated(true);
+        setMicrosoftMssgGenerated(true);
+        setXaiMssgGenerated(true);
+        setCore42MssgGenerated(true);
       }, 5000);
     });
 
@@ -351,6 +383,11 @@ export default function Client({ children }) {
       setIsError(true);
       setTimeout(() => {
         setIsError(false);
+        setChatgptMssgGenerated(true);
+        setMetaMssgGenerated(true);
+        setMicrosoftMssgGenerated(true);
+        setXaiMssgGenerated(true);
+        setCore42MssgGenerated(true);
       }, 5000);
     });
 
@@ -371,26 +408,41 @@ export default function Client({ children }) {
         socketRef,
         isLimit,
         isError,
-        // Chatgpt
+
+        // ChatGPT
         chatgptConversation,
         setChatgptConversation,
-        sendChatgptUserMessage,
+        handleSendChatgptUserMessage,
+        chatgptMssgGenerated,
+        setChatgptMssgGenerated,
+
         // Meta
         metaConversation,
         setMetaConversation,
-        sendMetaUserMessage,
+        handleSendMetaUserMessage,
+        metaMssgGenerated,
+        setMetaMssgGenerated,
+
         // Microsoft
         microsoftConversation,
         setMicrosoftConversation,
         sendMicrosoftUserMessage,
+        microsoftMssgGenerated,
+        setMicrosoftMssgGenerated,
+
         // XAi
         xAiConversation,
         setXAiConversation,
-        sendXAiUserMessage,
+        handleSendXAiUserMessage,
+        xaiMssgGenerated,
+        setXaiMssgGenerated,
+
         // Core42
         core42Conversation,
         setCore42Conversation,
-        sendCore42UserMessage,
+        handleSendCore42UserMessage,
+        core42MssgGenerated,
+        setCore42MssgGenerated,
       }}
     >
       <ToastContainer

@@ -3,6 +3,7 @@
 import { useState, useContext, useEffect, useRef } from "react";
 import Image from "next/image";
 import { FaArrowDown } from "react-icons/fa6";
+import { MdSquare } from "react-icons/md";
 import { CiLocationArrow1 } from "react-icons/ci";
 import { ToastContainer } from "react-toastify";
 import { toast } from "react-toastify";
@@ -17,11 +18,13 @@ export default function Core42() {
   const {
     core42Conversation,
     setCore42Conversation,
-    sendCore42UserMessage,
+    handleSendCore42UserMessage,
     isLoaded,
     setIsLoaded,
     isLimit,
     isError,
+    core42MssgGenerated,
+    setCore42MssgGenerated,
   } = useContext(MyContext);
 
   const [userMessage, setUserMessage] = useState("");
@@ -87,7 +90,8 @@ export default function Core42() {
     if (inputMessage.trim() !== "" && !isLimit && !isError) {
       inputRef.current?.blur(); // hide the keyboard when message is sent (on mobile)
       setUserMessage(inputMessage);
-      sendCore42UserMessage(inputMessage); // Send The User Message To Core42 Api
+      handleSendCore42UserMessage(inputMessage); // Send The User Message To Core42 Api
+      setCore42MssgGenerated(false);
       setInputMessage("");
       setCore42Conversation((prev) => [
         // Push The User Message To The Conversation Array
@@ -111,8 +115,10 @@ export default function Core42() {
   }, [isLimit, isError]);
 
   const handleKeyDown = (e) => {
-    if (e.key === "Enter" && inputMessage.trim() !== "") {
-      handleInputMessage();
+    if (core42MssgGenerated) {
+      if (e.key === "Enter" && inputMessage.trim() !== "") {
+        handleInputMessage();
+      }
     }
   };
 
@@ -144,12 +150,15 @@ export default function Core42() {
       >
         {/* Reset button */}
         <div
-          className={`fixed left-1/2 -translate-x-1/2 top-[16px] lg:z-10 z-[50] lg:left-auto lg:right-0 lg:top-[100px] xl:right-[40px] 
+          className={`fixed left-1/2 -translate-x-1/2 top-[15px] lg:z-10 z-[50] lg:left-auto lg:right-0 lg:top-[100px] xl:right-[40px] 
              ${core42Conversation.length > 0 ? "block" : "hidden"}`}
         >
           <button
             className="text-white cool_button !w-auto !text-base !p-3"
-            onClick={() => setCore42Conversation([])}
+            onClick={() => {
+              setCore42Conversation([]);
+              setCore42MssgGenerated(true);
+            }}
           >
             <span className="pt-1">إعادة ضبط</span>
             <Image
@@ -167,7 +176,7 @@ export default function Core42() {
       {/* Area Placeholder (make some space above input area) */}
       <div
         id="area_placeholder"
-        className="w-full bg-inherit h-[172px] relative"
+        className="w-full bg-inherit h-[272px] relative"
         style={{ display: core42Conversation.length > 0 ? "block" : "none" }}
       ></div>
 
@@ -245,12 +254,22 @@ export default function Core42() {
           {/* Send Message Button */}
           <button
             id="send_message"
-            title={`${inputMessage ? "أرسل رسالة" : "الرسالة فارغة"}`}
+            title={`${
+              !core42MssgGenerated
+                ? "جارٍ التوليد..."
+                : inputMessage
+                ? "أرسل رسالة"
+                : "الرسالة فارغة"
+            }`}
             onClick={handleInputMessage}
-            disabled={!inputMessage || isLimit}
+            disabled={!inputMessage || isLimit || !core42MssgGenerated}
             className="absolute left-0 top-[50%] disabled:cursor-default disabled:text-gray-400 text-black translate-y-[-50%] ml-4"
           >
-            <CiLocationArrow1 size={45} className=" py-2 px-2" />
+            {core42MssgGenerated ? (
+              <CiLocationArrow1 size={45} className="p-2" />
+            ) : (
+              <MdSquare size={45} className="p-2" />
+            )}
           </button>
         </div>
         {/* Info Sentence */}
