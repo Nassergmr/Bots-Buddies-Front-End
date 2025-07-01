@@ -5,8 +5,8 @@ import Image from "next/image";
 import { FaArrowDown } from "react-icons/fa6";
 import { MdSquare } from "react-icons/md";
 import { CiLocationArrow1 } from "react-icons/ci";
-import { ToastContainer } from "react-toastify";
-import { toast } from "react-toastify";
+// import { ToastContainer } from "react-toastify";
+// import { toast } from "react-toastify";
 import { Slide } from "react-toastify";
 import { MyContext } from "../../../client";
 import Messages from "../messages";
@@ -25,6 +25,8 @@ export default function Core42() {
     isError,
     core42MssgGenerated,
     setCore42MssgGenerated,
+    isArabicLetters,
+    setIsArabicLetters,
   } = useContext(MyContext);
 
   const [userMessage, setUserMessage] = useState("");
@@ -235,16 +237,10 @@ export default function Core42() {
               if (arabicRegex.test(arabicCharacter)) {
                 setInputMessage(arabicCharacter);
               } else {
-                toast(
-                  <div className="flex flex-col gap-1 text-lg pt-3 mx-auto sm:mx-0">
-                    <p className="sm:text-start text-center">
-                      .Only Arabic letters are allowed
-                    </p>
-                    <p className="sm:text-start text-center">
-                      يُسمح فقط بالحروف العربية.
-                    </p>
-                  </div>
-                );
+                setIsArabicLetters(false);
+                setTimeout(() => {
+                  setIsArabicLetters(true);
+                }, 5000);
                 inputRef.current?.blur(); // hide the keyboard when message is sent (on mobile)
               }
             }}
@@ -284,16 +280,6 @@ export default function Core42() {
           ></p>
         </div>
       </div>
-      <ToastContainer
-        position="top-right"
-        autoClose={2000}
-        hideProgressBar={false}
-        closeOnClick={false}
-        pauseOnHover={true}
-        draggable={true}
-        theme="dark"
-        transition={Slide}
-      />
     </div>
   );
 }

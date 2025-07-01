@@ -60,42 +60,47 @@ export default function Client({ children }) {
   const [core42Message, setCore42Message] = useState("");
   const [core42Conversation, setCore42Conversation] = useState([]);
   const [core42MssgGenerated, setCore42MssgGenerated] = useState(true);
+  const [isArabicLetters, setIsArabicLetters] = useState(true);
 
-  // Handle errors on client side
+  // Alert user about errors
   useEffect(() => {
     if (isLimit) {
-      toast(
-        <div className="flex flex-col gap-3 text-center">
-          <FaExclamationCircle size={32} className="mx-auto text-red-600" />
-          <div>Daily rate limit reached for this model, retry later</div>
+      toast.error(
+        <div className="flex flex-col gap-3 text-center mx-auto">
+          <FaExclamationCircle size={32} className="text-[#E64D3C] mx-auto" />
+          <div className="text-white">
+            Daily rate limit reached for this model, retry later
+          </div>
           {path.includes("core") && (
-            <div>
+            <div className="text-white">
               تم الوصول إلى الحد الأقصى للسعر اليومي لهذا النموذج، أعد المحاولة
               لاحقًا
             </div>
           )}
-        </div>,
-        {
-          className: "custom-toast",
-        }
+        </div>
       );
     }
-  }, [isLimit]);
-
-  useEffect(() => {
     if (isError) {
-      toast(
-        <div className="flex flex-col gap-3 text-center">
-          <FaExclamationCircle size={32} className="mx-auto text-red-600" />
-          <div>Something went wrong, try again</div>
-          {path.includes("core") && <div>حدث خطأ ما، حاول مرة أخرى</div>}
-        </div>,
-        {
-          className: "custom-toast",
-        }
+      toast.error(
+        <div className="flex flex-col gap-3 mx-auto text-center">
+          <FaExclamationCircle size={32} className="text-[#E64D3C] mx-auto" />
+          <div className="text-white">Something went wrong, try again</div>
+          {path.includes("core") && (
+            <div className="text-white">حدث خطأ ما، حاول مرة أخرى</div>
+          )}
+        </div>
       );
     }
-  }, [isError]);
+    if (!isArabicLetters) {
+      toast.info(
+        <div className="flex flex-col gap-3 mx-auto text-center">
+          <FaExclamationCircle size={32} className="text-[#4298DB] mx-auto" />
+          <div>Only Arabic letters are allowed</div>
+          <div>يُسمح فقط بالحروف العربية</div>
+        </div>
+      );
+    }
+  }, [isLimit, isError, isArabicLetters, path]);
 
   /* Get From LocalStorage */
   // Chatgpt
@@ -365,7 +370,7 @@ export default function Client({ children }) {
       setCore42MssgGenerated(true);
     });
 
-    // Alert for the rate limit error (ex: 50 requests a day) and any error
+    // Handle the rate limit error (ex: 50 requests a day) and any error
     socketRef.current.on("rate_limit_exceeded", () => {
       setIsLimit(true);
       setTimeout(() => {
@@ -442,6 +447,8 @@ export default function Client({ children }) {
         handleSendCore42UserMessage,
         core42MssgGenerated,
         setCore42MssgGenerated,
+        isArabicLetters,
+        setIsArabicLetters,
       }}
     >
       <ToastContainer
@@ -454,8 +461,9 @@ export default function Client({ children }) {
         draggable={false}
         theme="dark"
         transition={Zoom}
-        closeButton={false}
-        pauseOnHover={false}
+        closeButton={true}
+        pauseOnHover={true}
+        icon={false}
       />
       {children}
     </MyContext.Provider>

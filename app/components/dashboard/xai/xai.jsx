@@ -219,7 +219,7 @@ export default function XAi() {
 
           {/* Input */}
           <input
-            placeholder="Ask Grok 3"
+            placeholder="Ask Grok 3 Mini"
             value={inputMessage}
             onKeyDown={handleKeyDown}
             onChange={(e) => setInputMessage(e.target.value)}
