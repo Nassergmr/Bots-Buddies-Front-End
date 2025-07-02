@@ -50,10 +50,6 @@ export default function Chatgpt() {
     setIsLoaded(true);
   }, []);
 
-  useEffect(() => {
-    console.log(chatgptMssgGenerated);
-  }, [chatgptMssgGenerated]);
-
   // Scroll To Bottom
   useEffect(() => {
     const handleScroll = () => {
@@ -241,19 +237,12 @@ export default function Chatgpt() {
             )}
           </button>
         </div>
-        {/* Info Sentence */}
         <div
-          id="info"
+          id="area_placeholder"
           className={`${
             chatgptConversation.length > 0 ? "fixed block" : "hidden"
           } w-full bottom-[-1px] h-[30px] left-0`}
-        >
-          <p
-            className={`absolute w-full left-[50%] translate-x-[-50%] top-[50%] translate-y-[-50%] text-[#B4B4B4] text-center text-xs`}
-          >
-            ChatGPT can make mistakes. Check important info.
-          </p>
-        </div>
+        ></div>
       </div>
     </div>
   );

@@ -14,7 +14,7 @@ export default function Microsoft() {
   const {
     microsoftConversation,
     setMicrosoftConversation,
-    sendMicrosoftUserMessage,
+    handleSendMicrosoftUserMessage,
     isLoaded,
     setIsLoaded,
     isLimit,
@@ -86,7 +86,7 @@ export default function Microsoft() {
     if (inputMessage.trim() !== "" && !isLimit && !isError) {
       inputRef.current?.blur(); // hide the keyboard when message is sent (on mobile)
       setUserMessage(inputMessage);
-      sendMicrosoftUserMessage(inputMessage); // Send The User Message To Microsoft Api
+      handleSendMicrosoftUserMessage(inputMessage); // Send The User Message To Microsoft Api
       setMicrosoftMssgGenerated(false);
       setInputMessage("");
       setMicrosoftConversation((prev) => [
@@ -250,19 +250,12 @@ export default function Microsoft() {
           </button>
         </div>
 
-        {/* Info Sentence */}
         <div
-          id="info"
+          id="area_placeholder"
           className={`${
             microsoftConversation.length > 0 ? "fixed block" : "hidden"
           } w-full bottom-[-1px] h-[30px] text-[#E0CEBF] left-0`}
-        >
-          <p
-            className={`absolute w-full left-[50%] translate-x-[-50%] top-[50%] translate-y-[-50%] text-[#B4B4B4] text-center text-xs`}
-          >
-            Phi-4 may make mistakes.
-          </p>
-        </div>
+        ></div>
       </div>
     </div>
   );

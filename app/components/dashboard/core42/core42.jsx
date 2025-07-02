@@ -268,17 +268,12 @@ export default function Core42() {
             )}
           </button>
         </div>
-        {/* Info Sentence */}
         <div
-          id="info"
+          id="area_placeholder"
           className={`${
             core42Conversation.length > 0 ? "fixed block" : "hidden"
           } w-full bottom-[-1px] h-[30px] left-0`}
-        >
-          <p
-            className={`absolute w-full left-[50%] translate-x-[-50%] top-[50%] translate-y-[-50%] text-[#B4B4B4] text-center text-xs`}
-          ></p>
-        </div>
+        ></div>
       </div>
     </div>
   );

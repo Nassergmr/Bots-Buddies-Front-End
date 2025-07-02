@@ -219,7 +219,7 @@ export default function Meta() {
           </button>
           {/* Input */}
           <input
-            placeholder="Ask Meta-Llama-3-8B-Instruct"
+            placeholder="Ask Llama 4 Scout 17B 16E Instruct"
             value={inputMessage}
             onKeyDown={handleKeyDown}
             onChange={(e) => setInputMessage(e.target.value)}
@@ -248,15 +248,11 @@ export default function Meta() {
           </button>
         </div>
         <div
-          id="info"
+          id="area_placeholder"
           className={`${
             metaConversation.length > 0 ? "fixed block" : "hidden"
           } w-full bottom-[-1px] h-[30px] left-0`}
-        >
-          <p
-            className={`absolute w-full left-[50%] translate-x-[-50%] top-[50%] translate-y-[-50%] text-[#B4B4B4] text-center text-xs`}
-          ></p>
-        </div>
+        ></div>
       </div>
     </div>
   );
