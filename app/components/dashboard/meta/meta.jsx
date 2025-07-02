@@ -39,7 +39,7 @@ export default function Meta() {
 
   useEffect(() => {
     setTimeout(() => {
-      info.style.backgroundColor = "#101112";
+      area_placeholder_bottom.style.backgroundColor = "#101112";
     }, 500);
   }, []);
 
@@ -175,7 +175,7 @@ export default function Meta() {
 
       {/* Area Placeholder (make some space above input area) */}
       <div
-        id="area_placeholder"
+        id="area_placeholder_top"
         className="w-full bg-inherit h-[300px] relative"
         style={{ display: metaConversation.length > 0 ? "block" : "none" }}
       ></div>
@@ -248,7 +248,7 @@ export default function Meta() {
           </button>
         </div>
         <div
-          id="area_placeholder"
+          id="area_placeholder_bottom"
           className={`${
             metaConversation.length > 0 ? "fixed block" : "hidden"
           } w-full bottom-[-1px] h-[30px] left-0`}

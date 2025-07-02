@@ -41,7 +41,7 @@ export default function Core42() {
 
   useEffect(() => {
     setTimeout(() => {
-      info.style.backgroundColor = "#1D232A";
+      area_placeholder_bottom.style.backgroundColor = "#1D232A";
     }, 500);
   }, []);
 
@@ -177,7 +177,7 @@ export default function Core42() {
 
       {/* Area Placeholder (make some space above input area) */}
       <div
-        id="area_placeholder"
+        id="area_placeholder_top"
         className="w-full bg-inherit h-[272px] relative"
         style={{ display: core42Conversation.length > 0 ? "block" : "none" }}
       ></div>
@@ -269,7 +269,7 @@ export default function Core42() {
           </button>
         </div>
         <div
-          id="area_placeholder"
+          id="area_placeholder_bottom"
           className={`${
             core42Conversation.length > 0 ? "fixed block" : "hidden"
           } w-full bottom-[-1px] h-[30px] left-0`}

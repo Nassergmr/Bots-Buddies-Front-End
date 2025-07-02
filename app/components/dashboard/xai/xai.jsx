@@ -36,7 +36,7 @@ export default function XAi() {
 
   useEffect(() => {
     setTimeout(() => {
-      info.style.backgroundColor = "#151718";
+      area_placeholder_bottom.style.backgroundColor = "#151718";
     }, 500);
   }, []);
 
@@ -171,7 +171,7 @@ export default function XAi() {
 
       {/* Area Placeholder (make some space above input area) */}
       <div
-        id="area_placeholder"
+        id="area_placeholder_top"
         className="w-full bg-[#151718] h-[300px] relative"
         style={{ display: xAiConversation.length > 0 ? "block" : "none" }}
       ></div>
@@ -248,7 +248,7 @@ export default function XAi() {
           </button>
         </div>
         <div
-          id="area_placeholder"
+          id="area_placeholder_bottom"
           className={`${
             xAiConversation.length > 0 ? "fixed block" : "hidden"
           } w-full bottom-[-1px] h-[30px] left-0`}

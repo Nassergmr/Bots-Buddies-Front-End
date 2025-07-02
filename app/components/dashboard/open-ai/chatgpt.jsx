@@ -35,7 +35,7 @@ export default function Chatgpt() {
 
   useEffect(() => {
     setTimeout(() => {
-      info.style.backgroundColor = "#212121";
+      area_placeholder_bottom.style.backgroundColor = "#212121";
     }, 500);
   }, []);
 
@@ -166,7 +166,7 @@ export default function Chatgpt() {
 
       {/* Area Placeholder (make some space above input area) */}
       <div
-        id="area_placeholder"
+        id="area_placeholder_top"
         className="w-full bg-inherit h-[300px] relative"
         style={{ display: chatgptConversation.length > 0 ? "block" : "none" }}
       ></div>
@@ -238,7 +238,7 @@ export default function Chatgpt() {
           </button>
         </div>
         <div
-          id="area_placeholder"
+          id="area_placeholder_bottom"
           className={`${
             chatgptConversation.length > 0 ? "fixed block" : "hidden"
           } w-full bottom-[-1px] h-[30px] left-0`}
