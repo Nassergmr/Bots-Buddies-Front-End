@@ -230,7 +230,7 @@ export default function Client({ children }) {
   };
 
   // Send The Microsoft User Message to The Server
-  const sendMicrosoftUserMessage = (message) => {
+  const handleSendMicrosoftUserMessage = (message) => {
     if (socketRef.current) {
       socketRef.current.emit("microsoft_conversation", message);
     }
@@ -430,7 +430,7 @@ export default function Client({ children }) {
         // Microsoft
         microsoftConversation,
         setMicrosoftConversation,
-        sendMicrosoftUserMessage,
+        handleSendMicrosoftUserMessage,
         microsoftMssgGenerated,
         setMicrosoftMssgGenerated,
 
