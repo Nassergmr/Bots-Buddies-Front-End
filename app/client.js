@@ -246,7 +246,10 @@ export default function Client({ children }) {
   // Send The Core42 User Message to The Server
   const handleSendCore42UserMessage = (message) => {
     if (socketRef.current) {
-      socketRef.current.emit("core42_conversation", message);
+      socketRef.current.emit(
+        "core42_conversation",
+        `(respond in Arabic) ${message}`
+      );
     }
   };
 
