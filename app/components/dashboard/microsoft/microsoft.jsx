@@ -39,7 +39,7 @@ export default function Microsoft() {
     }, 500);
   }, []);
 
-  // Await page content until page loads (in case user refresh page)
+  // Await page content until page loads
   useEffect(() => {
     if (window.performance && window.performance.navigation.type === 1) {
       setIsLoaded(true);
@@ -101,7 +101,7 @@ export default function Microsoft() {
     }
   };
 
-  // Remove last object from the array when limit is reached
+  // Remove last message from the array when limit is reached or if there error
   useEffect(() => {
     if (isLimit || isError) {
       setTimeout(() => {
