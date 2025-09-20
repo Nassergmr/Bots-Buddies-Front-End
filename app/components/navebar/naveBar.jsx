@@ -48,10 +48,10 @@ export default function NaveBar() {
           >
             <Link
               className={`cool_button ${
-                path.includes("open-ai") && buttonActive ? "clicked" : ""
+                path.includes("gpt") && buttonActive ? "clicked" : ""
               }`}
-              href={"/models/open-ai"}
-              id="open-ai"
+              href={"/models/gpt"}
+              id="gpt"
             >
               <Image
                 src={OpenAiLogo}
@@ -65,10 +65,10 @@ export default function NaveBar() {
 
             <Link
               className={`cool_button liberationText ${
-                path.includes("meta") && buttonActive ? "clicked" : ""
+                path.includes("llama") && buttonActive ? "clicked" : ""
               }`}
-              href={"/models/meta"}
-              id="meta"
+              href={"/models/llama"}
+              id="llama"
             >
               <Image
                 src={MetaLogo}
@@ -81,10 +81,10 @@ export default function NaveBar() {
             </Link>
 
             <Link
-              href={"/models/core42"}
-              id="Core42"
+              href={"/models/jais"}
+              id="Jais"
               className={`cool_button !max-h-[50px] ${
-                path.includes("core") && buttonActive ? "clicked" : ""
+                path.includes("jais") && buttonActive ? "clicked" : ""
               }`}
             >
               <Image
@@ -99,10 +99,10 @@ export default function NaveBar() {
 
             <Link
               className={`cool_button gintoText ${
-                path.includes("microsoft") && buttonActive ? "clicked" : ""
+                path.includes("phi") && buttonActive ? "clicked" : ""
               }`}
-              href={"/models/microsoft"}
-              id="microsoft"
+              href={"/models/phi"}
+              id="phi"
             >
               <Image
                 src={MicrosoftLogo}
@@ -115,10 +115,10 @@ export default function NaveBar() {
             </Link>
 
             <Link
-              href={"/models/xai"}
-              id="xai"
+              href={"/models/grok"}
+              id="grok"
               className={`cool_button manropeText ${
-                path.includes("xai") && buttonActive ? "clicked" : ""
+                path.includes("grok") && buttonActive ? "clicked" : ""
               }`}
             >
               <Image

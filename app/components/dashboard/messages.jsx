@@ -11,6 +11,7 @@ import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { dracula } from "react-syntax-highlighter/dist/esm/styles/prism";
 import ReactMarkdown from "react-markdown";
 import { FiUser } from "react-icons/fi";
+import { TextAnimate } from "@/components/ui/text-animate";
 
 export default function Messages({
   messagesEndRef,
@@ -47,7 +48,7 @@ export default function Messages({
   return (
     <>
       {/* Chatgpt */}
-      {route.includes("open-ai") &&
+      {route.includes("gpt") &&
         chatgptConversation.map((mssg, index) => (
           <div key={index}>
             {/* User Message */}
@@ -90,7 +91,7 @@ export default function Messages({
         ))}
 
       {/* Meta */}
-      {route.includes("meta") &&
+      {route.includes("llama") &&
         metaConversation.map((mssg, index) => (
           <div key={index}>
             {/* User Message */}
@@ -122,11 +123,22 @@ export default function Messages({
             )}
 
             {/* Meta Response */}
+
             {mssg.isai && (
               <span className="leading-relaxed">
                 {mssg.animate ? (
-                  <TypeWriter text={mssg.text} delay={0.3} infinite />
+                  <TextAnimate
+                    animation="blurInUp"
+                    by="line"
+                    duration={4}
+                    // delay={0.5}
+                    startOnView={true}
+                    once={true}
+                  >
+                    {mssg.text}
+                  </TextAnimate>
                 ) : (
+                  // <TypeWriter text={mssg.text} delay={0.3} infinite />
                   <ReactMarkdown components={renderers}>
                     {mssg.text}
                   </ReactMarkdown>
@@ -137,7 +149,7 @@ export default function Messages({
         ))}
 
       {/* Microsoft */}
-      {route.includes("microsoft") &&
+      {route.includes("phi") &&
         microsoftConversation.map((mssg, index) => (
           <div key={index}>
             {/* User Message */}
@@ -180,9 +192,9 @@ export default function Messages({
         ))}
 
       {/* XAi */}
-      {route.includes("xai") &&
+      {route.includes("grok") &&
         xAiConversation.map((mssg, index) => (
-          <div key={index}>
+          <div key={index} className="">
             {/* User Message */}
             {!mssg.isai && (
               <div
@@ -223,7 +235,7 @@ export default function Messages({
         ))}
 
       {/* Core42 */}
-      {route.includes("core") &&
+      {route.includes("jais") &&
         core42Conversation.map((mssg, index) => (
           <div key={index}>
             {/* User Message */}

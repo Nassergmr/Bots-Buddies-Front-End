@@ -33,10 +33,10 @@ export default function Drawer({
         <Link
           onClick={() => setOpenDrawer(false)}
           className={`cool_button mt-12 !w-full !py-4  ${
-            path.includes("open-ai") && buttonActive ? "clicked" : ""
+            path.includes("gpt") && buttonActive ? "clicked" : ""
           }`}
-          href={"/models/open-ai"}
-          id="open-ai"
+          href={"/models/gpt"}
+          id="gpt"
         >
           <Image
             src={OpenAiLogo}
@@ -51,10 +51,10 @@ export default function Drawer({
         <Link
           onClick={() => setOpenDrawer(false)}
           className={`cool_button liberationText !w-full !py-4 ${
-            path.includes("meta") && buttonActive ? "clicked" : ""
+            path.includes("llama") && buttonActive ? "clicked" : ""
           }`}
-          href={"/models/meta"}
-          id="meta"
+          href={"/models/llama"}
+          id="llama"
         >
           <Image
             src={MetaLogo}
@@ -68,10 +68,10 @@ export default function Drawer({
 
         <Link
           onClick={() => setOpenDrawer(false)}
-          href={"/models/core42"}
-          id="Core42"
+          href={"/models/jais"}
+          id="Jais"
           className={`cool_button !w-full !py-4 ${
-            path.includes("core42") && buttonActive ? "clicked" : ""
+            path.includes("jais") && buttonActive ? "clicked" : ""
           }`}
         >
           <Image
@@ -87,10 +87,10 @@ export default function Drawer({
         <Link
           onClick={() => setOpenDrawer(false)}
           className={`cool_button gintoText !w-full !py-4 ${
-            path.includes("microsoft") && buttonActive ? "clicked" : ""
+            path.includes("phi") && buttonActive ? "clicked" : ""
           }`}
-          href={"/models/microsoft"}
-          id="microsoft"
+          href={"/models/phi"}
+          id="phi"
         >
           <Image
             src={MicrosoftLogo}
@@ -104,10 +104,10 @@ export default function Drawer({
 
         <Link
           onClick={() => setOpenDrawer(false)}
-          href={"/models/xai"}
-          id="xai"
+          href={"/models/grok"}
+          id="grok"
           className={`cool_button manropeText !w-full !py-4 ${
-            path.includes("xai") && buttonActive ? "clicked" : ""
+            path.includes("grok") && buttonActive ? "clicked" : ""
           }`}
         >
           <Image src={XAiLogo} width={30} height={30} alt="" className="z-10" />

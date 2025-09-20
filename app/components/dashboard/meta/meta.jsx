@@ -182,7 +182,7 @@ export default function Meta() {
 
       <div
         id="chat_container"
-        className={`z-30 px-3 transition ease-out duration-500 xl:w-[52%] lg:w-[62%] md:w-[72%] sm:w-[82%] w-full
+        className={`z-30 px-3 xl:w-[52%] lg:w-[62%] md:w-[72%] sm:w-[82%] w-full
     ${
       metaConversation?.length > 0
         ? `bottom-0 fixed  translate-x-[-50%] left-[50%]`

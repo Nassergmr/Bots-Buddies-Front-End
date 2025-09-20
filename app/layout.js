@@ -12,7 +12,7 @@ const LiberationSansFont = liberationSans({
 });
 
 const GintoFont = ginto({
-  src: "./fonts/ginto/ABCGintoNormal-Regular-Trial-BF651b7b7846685.otf",
+  src: "./fonts/ginto/ABCGintoPlusVariable-Trial-BF651b7b7c8d960.ttf",
   variable: "--font-ginto",
 });
 

@@ -1,15 +1,17 @@
 "use client";
 
 import { useState, useContext, useEffect, useRef } from "react";
+import Image from "next/image";
 import { MyContext } from "../../../client";
 import { FaArrowUp } from "react-icons/fa6";
 import { FaArrowDown } from "react-icons/fa6";
 import { MdSquare } from "react-icons/md";
 import Messages from "../messages";
-import Image from "next/image";
+import { Particles } from "../../../../components/ui/particles";
 import groklogo from "../../../assets/grok.png";
 import ResetButton from "../../../assets/reset.png";
 import setBodyColor from "../../elements/bodyColor";
+import { ParticlesComponent } from "../../elements/particlesComponent";
 
 export default function XAi() {
   const {
@@ -142,7 +144,7 @@ export default function XAi() {
     >
       <div
         id="messages_container"
-        className={`px-1 mx-auto mt-[100px] break-words whitespace-normal xl:w-[50%] lg:w-[60%] md:w-[70%] sm:w-[80%] z-20`}
+        className={`px-1 mx-auto mt-[100px] break-words whitespace-normal xl:w-[50%] lg:w-[60%] md:w-[70%] sm:w-[80%] z-20 relative`}
       >
         {/* Reset button */}
         <div
@@ -182,16 +184,16 @@ export default function XAi() {
     ${
       xAiConversation.length > 0
         ? `bottom-0 fixed  translate-x-[-50%] left-[50%]`
-        : "top-[50%] absolute translate-x-[-50%] left-[50%] translate-y-[calc(-50%-90px)]"
+        : "top-[54%] absolute translate-x-[-50%] left-[50%] translate-y-[calc(-50%-90px)]"
     }`}
       >
         <div
           id="logo_container"
-          className="flex gap-2 items-center text-center justify-center mb-9"
+          className="flex gap-2 items-center text-center justify-center mb-5"
           style={{ opacity: xAiConversation.length > 0 ? 0 : 1 }}
         >
-          <Image src={groklogo} width={100} height={100} alt="logo" priority />
-          <h1 id="title" className=" text-[#FCFCFC] text-5xl">
+          <Image src={groklogo} width={80} height={80} alt="logo" priority />
+          <h1 id="title" className=" text-[#FCFCFC] text-5xl ">
             Grok
           </h1>
         </div>

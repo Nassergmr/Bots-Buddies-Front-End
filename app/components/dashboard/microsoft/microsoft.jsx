@@ -178,10 +178,10 @@ export default function Microsoft() {
 
       <div
         id="chat_container"
-        className={`z-30 px-3 xl:w-[52%] lg:w-[62%] md:w-[72%] sm:w-[82%] w-full 
+        className={`z-30 px-3 xl:w-[52%] lg:w-[62%] md:w-[72%] sm:w-[82%] w-full
     ${
       microsoftConversation.length > 0
-        ? `bottom-0 fixed  translate-x-[-50%] left-[50%]`
+        ? `bottom-0 fixed  translate-x-[-50%] left-[50%]  transition ease-out duration-500`
         : "absolute translate-x-[-50%] left-[50%] top-[50%] translate-y-[calc(-50%-90px)] "
     }`}
       >
