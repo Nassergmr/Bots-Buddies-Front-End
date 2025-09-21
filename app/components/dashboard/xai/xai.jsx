@@ -142,32 +142,32 @@ export default function XAi() {
         isLoaded ? "block" : "hidden"
       }`}
     >
+      {/* Reset button */}
+      <div
+        className={`fixed left-1/2 -translate-x-1/2 top-[15px] lg:z-10 z-[50] lg:left-auto lg:right-0 lg:top-[100px] xl:right-[40px] 
+             ${xAiConversation.length > 0 ? "block" : "hidden"}`}
+      >
+        <button
+          className="text-white cool_button !w-auto !text-base !p-3"
+          onClick={() => {
+            setXAiConversation([]);
+            setXaiMssgGenerated(true);
+          }}
+        >
+          <Image
+            src={ResetButton}
+            width={22}
+            height={22}
+            alt=""
+            className="z-20"
+          />
+          <span>Reset</span>
+        </button>
+      </div>
       <div
         id="messages_container"
         className={`px-1 mx-auto mt-[100px] break-words whitespace-normal xl:w-[50%] lg:w-[60%] md:w-[70%] sm:w-[80%] z-20 relative`}
       >
-        {/* Reset button */}
-        <div
-          className={`fixed left-1/2 -translate-x-1/2 top-[15px] lg:z-10 z-[50] lg:left-auto lg:right-0 lg:top-[100px] xl:right-[40px] 
-             ${xAiConversation.length > 0 ? "block" : "hidden"}`}
-        >
-          <button
-            className="text-white cool_button !w-auto !text-base !p-3"
-            onClick={() => {
-              setXAiConversation([]);
-              setXaiMssgGenerated(true);
-            }}
-          >
-            <Image
-              src={ResetButton}
-              width={22}
-              height={22}
-              alt=""
-              className="z-20"
-            />
-            <span>Reset</span>
-          </button>
-        </div>
         <Messages xAiConversation={xAiConversation} />
       </div>
 

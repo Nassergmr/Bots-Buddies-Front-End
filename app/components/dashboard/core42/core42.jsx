@@ -146,32 +146,33 @@ export default function Core42() {
         isLoaded ? "block" : "hidden"
       }`}
     >
+      {/* Reset button */}
+      <div
+        className={`fixed left-1/2 -translate-x-1/2 top-[15px] lg:z-10 z-[50] lg:left-auto lg:right-0 lg:top-[100px] xl:right-[40px] 
+             ${core42Conversation.length > 0 ? "block" : "hidden"}`}
+      >
+        <button
+          className="text-white cool_button !w-auto !text-base !p-3"
+          onClick={() => {
+            setCore42Conversation([]);
+            setCore42MssgGenerated(true);
+          }}
+        >
+          <span className="pt-1">إعادة ضبط</span>
+          <Image
+            src={ResetButton}
+            width={22}
+            height={22}
+            alt=""
+            className="z-20"
+          />
+        </button>
+      </div>
+
       <div
         id="messages_container"
         className={`px-1 mx-auto text-[#FEFEFE] text-lg mt-[100px] break-words whitespace-normal xl:w-[50%] lg:w-[60%] md:w-[70%] sm:w-[80%] z-20`}
       >
-        {/* Reset button */}
-        <div
-          className={`fixed left-1/2 -translate-x-1/2 top-[15px] lg:z-10 z-[50] lg:left-auto lg:right-0 lg:top-[100px] xl:right-[40px] 
-             ${core42Conversation.length > 0 ? "block" : "hidden"}`}
-        >
-          <button
-            className="text-white cool_button !w-auto !text-base !p-3"
-            onClick={() => {
-              setCore42Conversation([]);
-              setCore42MssgGenerated(true);
-            }}
-          >
-            <span className="pt-1">إعادة ضبط</span>
-            <Image
-              src={ResetButton}
-              width={22}
-              height={22}
-              alt=""
-              className="z-20"
-            />
-          </button>
-        </div>
         <Messages core42Conversation={core42Conversation} />
       </div>
 
