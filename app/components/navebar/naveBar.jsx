@@ -21,14 +21,6 @@ export default function NaveBar() {
 
   useEffect(() => {
     setButtonActive(true);
-
-    // Disable button effect after 1s on large screens
-    const bodyWidth = window.innerWidth;
-    if (bodyWidth > 1024) {
-      setTimeout(() => {
-        setButtonActive(false);
-      }, 1000);
-    }
   }, [path]);
 
   const handleDrawer = () => {

@@ -175,7 +175,7 @@ pre div {
   border-radius: 9px;
   transition: 0.5s;
   opacity: 0;
-  filter: blur(20px);
+  filter: blur(10px);
 }
 
 .cool_button.clicked:after {
