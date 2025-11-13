@@ -4,6 +4,7 @@ import OpenAiLogo from "../../assets/logos/open-ai-seeklogo.png";
 import MetaLogo from "../../assets/logos/meta.png";
 import MicrosoftLogo from "../../assets/logos/microsoft.png";
 import XAiLogo from "../../assets/logos/xai.png";
+import mistralLogo from "../../assets/logos/mistral.png";
 import Core42Logo from "../../assets/logos/core42.png";
 import { IoMdClose } from "react-icons/io";
 
@@ -67,6 +68,23 @@ export default function Drawer({
         </Link>
 
         <Link
+          href={"/models/codestral"}
+          id="codestral"
+          className={`cool_button interText !w-full !py-4 ${
+            path.includes("codestral") && buttonActive ? "clicked" : ""
+          }`}
+        >
+          <Image
+            src={mistralLogo}
+            width={28}
+            height={28}
+            alt=""
+            className="z-10"
+          />
+          <span>Mistral</span>
+        </Link>
+
+        {/* <Link
           onClick={() => setOpenDrawer(false)}
           href={"/models/jais"}
           id="Jais"
@@ -82,7 +100,7 @@ export default function Drawer({
             className="z-10"
             priority
           />
-        </Link>
+        </Link> */}
 
         <Link
           onClick={() => setOpenDrawer(false)}

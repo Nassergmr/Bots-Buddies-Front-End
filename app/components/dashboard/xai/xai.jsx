@@ -184,7 +184,7 @@ export default function XAi() {
     ${
       xAiConversation.length > 0
         ? `bottom-0 fixed  translate-x-[-50%] left-[50%]`
-        : "top-[54%] absolute translate-x-[-50%] left-[50%] translate-y-[calc(-50%-90px)]"
+        : "top-[53%] absolute translate-x-[-50%] left-[50%] translate-y-[calc(-50%-90px)]"
     }`}
       >
         <div

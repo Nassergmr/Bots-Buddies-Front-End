@@ -11,6 +11,7 @@ import MicrosoftLogo from "../../assets/logos/microsoft.png";
 import XAiLogo from "../../assets/logos/xai.png";
 import Chatgpt from "../dashboard/open-ai/chatgpt";
 import Core42Logo from "../../assets/logos/core42.png";
+import mistralLogo from "../../assets/logos/mistral.png";
 import Drawer from "./drawer";
 
 export default function NaveBar() {
@@ -64,15 +65,15 @@ export default function NaveBar() {
             >
               <Image
                 src={MetaLogo}
-                width={30}
-                height={30}
+                width={32}
+                height={32}
                 alt=""
                 className="z-10"
               />
               <span>Meta</span>
             </Link>
 
-            <Link
+            {/* <Link
               href={"/models/jais"}
               id="Jais"
               className={`cool_button !max-h-[50px] ${
@@ -87,6 +88,23 @@ export default function NaveBar() {
                 className="z-10"
                 priority
               />
+            </Link> */}
+
+            <Link
+              href={"/models/codestral"}
+              id="codestral"
+              className={`cool_button interText ${
+                path.includes("codestral") && buttonActive ? "clicked" : ""
+              }`}
+            >
+              <Image
+                src={mistralLogo}
+                width={28}
+                height={28}
+                alt=""
+                className="z-10"
+              />
+              <span>Mistral</span>
             </Link>
 
             <Link

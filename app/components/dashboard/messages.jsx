@@ -3,10 +3,13 @@ import { usePathname } from "next/navigation";
 import TypeWriter from "../elements/typeWriter";
 import ReactSpinner from "../elements/reactSpinner";
 import Icon from "../../assets/jais-icon.png";
-import CircleLoader from "react-spinners/BounceLoader";
+import mistral from "../../assets/m-boxed-orange.png";
+import BounceLoader from "react-spinners/BounceLoader";
 import PulseLoader from "react-spinners/PulseLoader";
 import DotLoader from "react-spinners/DotLoader";
 import PuffLoader from "react-spinners/PuffLoader";
+import CircleLoader from "react-spinners/CircleLoader";
+import { StaggeredFade } from "@/components/ui/staggeredFade";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { dracula } from "react-syntax-highlighter/dist/esm/styles/prism";
 import ReactMarkdown from "react-markdown";
@@ -20,6 +23,7 @@ export default function Messages({
   metaConversation,
   microsoftConversation,
   xAiConversation,
+  codestralConversation,
   core42Conversation,
 }) {
   // Text & Code Formatting
@@ -66,7 +70,7 @@ export default function Messages({
             {/* Loader While Waiting For Chatgpt Response */}
             {mssg.isloading && (
               <div className="">
-                <CircleLoader
+                <BounceLoader
                   color={"#A6A6A6"}
                   size={18}
                   data-testid="loader"
@@ -123,7 +127,6 @@ export default function Messages({
             )}
 
             {/* Meta Response */}
-
             {mssg.isai && (
               <span className="leading-relaxed">
                 {mssg.animate ? (
@@ -230,6 +233,58 @@ export default function Messages({
                   </ReactMarkdown>
                 )}
               </span>
+            )}
+          </div>
+        ))}
+
+      {/* Codestral */}
+      {route.includes("codestral") &&
+        codestralConversation.map((mssg, index) => (
+          <div key={index} className="">
+            {/* User Message */}
+            {!mssg.isai && (
+              <div
+                id="user_message_container"
+                className="sm:max-w-[65%] max-w-[75%] ml-auto break-words whitespace-normal my-8"
+              >
+                <p className="rounded-3xl bg-[#242628] px-5 py-[8px] w-fit max-w-[100%] ml-auto">
+                  {mssg.text}
+                </p>
+              </div>
+            )}
+
+            {/* Loader While Waiting For Codestral Response */}
+            {mssg.isloading && (
+              <div className="">
+                <CircleLoader
+                  color={"#ec4f13"}
+                  size={28}
+                  speedMultiplier={0.7}
+                  data-testid="loader"
+                />
+              </div>
+            )}
+
+            {/* Codestral Response */}
+            {mssg.isai && (
+              <div className=" flex items-start gap-3">
+                <Image
+                  src={mistral}
+                  width={28}
+                  height={28}
+                  alt=""
+                  className=""
+                />
+                <span className="leading-relaxed">
+                  {mssg.animate ? (
+                    <StaggeredFade text={mssg.text} />
+                  ) : (
+                    <ReactMarkdown components={renderers}>
+                      {mssg.text}
+                    </ReactMarkdown>
+                  )}
+                </span>
+              </div>
             )}
           </div>
         ))}

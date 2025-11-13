@@ -1,26 +1,31 @@
 "use client";
 
-import Image from "next/image";
 import { useState, useContext, useEffect, useRef } from "react";
+import Image from "next/image";
 import { MyContext } from "../../../client";
 import { FaArrowUp } from "react-icons/fa6";
 import { FaArrowDown } from "react-icons/fa6";
 import { MdSquare } from "react-icons/md";
 import Messages from "../messages";
+import codestralogo from "../../../assets/logos/codestral.png";
+
+// import LottieComponent from "./lottieComponent";
 import ResetButton from "../../../assets/reset.png";
 import setBodyColor from "../../elements/bodyColor";
 
-export default function Microsoft() {
+export default function Codestral() {
   const {
-    microsoftConversation,
-    setMicrosoftConversation,
-    handleSendMicrosoftUserMessage,
+    codestralMessage,
+    codestralConversation,
+    setCodestralMessage,
+    setCodestralConversation,
+    handleSendCodestralUserMessage,
     isLoaded,
     setIsLoaded,
     isLimit,
     isError,
-    microsoftMssgGenerated,
-    setMicrosoftMssgGenerated,
+    codestralMssgGenerated,
+    setCodestralMssgGenerated,
   } = useContext(MyContext);
 
   const [userMessage, setUserMessage] = useState("");
@@ -30,12 +35,12 @@ export default function Microsoft() {
   const inputRef = useRef();
 
   useEffect(() => {
-    setBodyColor("#101524");
+    setBodyColor("#18181B");
   }, []);
 
   useEffect(() => {
     setTimeout(() => {
-      area_placeholder_bottom.style.backgroundColor = "#101524";
+      area_placeholder_bottom.style.backgroundColor = "#18181B";
     }, 500);
   }, []);
 
@@ -78,18 +83,18 @@ export default function Microsoft() {
 
   useEffect(() => {
     if (process.env.NODE_ENV === "development") {
-      console.log("Microsoft Conversation:", microsoftConversation);
+      console.log("Codestral Conversation:", codestralConversation);
     }
-  }, [microsoftConversation]);
+  }, [codestralConversation]);
 
   const handleInputMessage = () => {
     if (inputMessage.trim() !== "" && !isLimit && !isError) {
       inputRef.current?.blur(); // hide the keyboard when message is sent (on mobile)
       setUserMessage(inputMessage);
-      handleSendMicrosoftUserMessage(inputMessage); // Send The User Message To Microsoft Api
-      setMicrosoftMssgGenerated(false);
+      handleSendCodestralUserMessage(inputMessage); // Send The User Message To codestral Api
+      setCodestralMssgGenerated(false);
       setInputMessage("");
-      setMicrosoftConversation((prev) => [
+      setCodestralConversation((prev) => [
         // Push The User Message To The Conversation Array
         ...prev,
         { text: inputMessage, animate: false, isloading: true },
@@ -105,20 +110,20 @@ export default function Microsoft() {
   useEffect(() => {
     if (isLimit || isError) {
       setTimeout(() => {
-        setMicrosoftConversation((prev) => prev.slice(0, -1));
+        setCodestralConversation((prev) => prev.slice(0, -1));
       }, 4000);
     }
   }, [isLimit, isError]);
 
   const handleKeyDown = (e) => {
-    if (microsoftMssgGenerated) {
+    if (codestralMssgGenerated) {
       if (e.key === "Enter" && inputMessage.trim() !== "") {
         handleInputMessage();
       }
     }
   };
 
-  // Scoll To Bottom
+  // Scroll To Bottom
   const scrollToBottom = () => {
     window.scrollTo({ top: document.body.scrollHeight });
   };
@@ -135,20 +140,20 @@ export default function Microsoft() {
   return (
     <div
       id="section_container"
-      className={`sm:min-h-[calc(100dvh-100px)] min-h-[calc(100dvh-100px)] px-3 h-full text-white w-full relative mx-auto gintoText ${
+      className={`sm:min-h-[calc(100dvh-100px)] min-h-[calc(100dvh-100px)] px-3 h-full  w-full relative text-[#F3F4F5] mx-auto interText ${
         isLoaded ? "block" : "hidden"
       }`}
     >
       {/* Reset button */}
       <div
         className={`fixed left-1/2 -translate-x-1/2 top-[15px] lg:z-10 z-[50] lg:left-auto lg:right-0 lg:top-[100px] xl:right-[40px] 
-             ${microsoftConversation.length > 0 ? "block" : "hidden"}`}
+            ${codestralConversation.length > 0 ? "block" : "hidden"}`}
       >
         <button
           className="text-white cool_button !w-auto !text-base !p-3"
           onClick={() => {
-            setMicrosoftConversation([]);
-            setMicrosoftMssgGenerated(true);
+            setCodestralConversation([]);
+            setCodestralMssgGenerated(true);
           }}
         >
           <Image
@@ -164,95 +169,101 @@ export default function Microsoft() {
 
       <div
         id="messages_container"
-        className={`px-1 mx-auto text-[#E1CEBF] mt-[100px] break-words whitespace-normal xl:w-[50%] lg:w-[60%] md:w-[70%] sm:w-[80%] w-[98%] z-20`}
+        className={`px-1 mx-auto mt-[100px] text-[#FEFEF7] break-words whitespace-normal z-20 xl:w-[50%] lg:w-[60%] md:w-[70%] sm:w-[80%] w-[98%]`}
       >
-        <Messages microsoftConversation={microsoftConversation} />
+        <Messages codestralConversation={codestralConversation} />
       </div>
 
       {/* Area Placeholder (make some space above input area) */}
       <div
         id="area_placeholder_top"
         className="w-full bg-inherit h-[300px] relative"
-        style={{ display: microsoftConversation.length > 0 ? "block" : "none" }}
+        style={{ display: codestralConversation.length > 0 ? "block" : "none" }}
       ></div>
 
       <div
         id="chat_container"
-        className={`z-30 px-3 xl:w-[52%] lg:w-[62%] md:w-[72%] sm:w-[82%] w-full
+        className={`z-30 px-3 xl:w-[52%] lg:w-[62%] md:w-[72%] sm:w-[82%] w-full overflow-hidden
     ${
-      microsoftConversation.length > 0
-        ? `bottom-0 fixed  translate-x-[-50%] left-[50%]  transition ease-out duration-500`
-        : "absolute translate-x-[-50%] left-[50%] top-[50%] translate-y-[calc(-50%-90px)] "
+      codestralConversation?.length > 0
+        ? `bottom-0 fixed  translate-x-[-50%] left-[50%]`
+        : "top-[52.5%] absolute translate-x-[-50%] left-[50%] translate-y-[calc(-50%-90px)]"
     }`}
       >
-        <h2
-          id="title"
-          className={`${
-            microsoftConversation.length > 0 ? "opacity-0" : " opacity-100"
-            // fadeIn-animation
-          } pl-3 h-[100px] sm:pt-[66px] pt-[50px] mb-9 text-[#E0CEBF] text-3xl sm:text-4xl sm:text-nowrap`}
+        <div
+          id="logo_container"
+          className="flex  items-center  justify-center mb-5"
+          style={{ opacity: codestralConversation.length > 0 ? 0 : 1 }}
         >
-          Hey, what’s on your mind today?
-        </h2>
+          <Image
+            src={codestralogo}
+            width={90}
+            height={90}
+            alt="logo"
+            priority
+          />
+        </div>
 
         <div
           id="input_container"
-          className={` ${
-            microsoftConversation.length > 0 ? "mb-[27px]" : " mb-0"
-            // fadeInUp-animation
-          } relative z-[100] rounded-3xl border-2 border-[#32384A]`}
+          className={`relative z-[100] ${
+            codestralConversation?.length > 0 ? "mb-[27px]" : "mb-0"
+          }`}
         >
           {/* Scroll To Bottom Button */}
           <button
             id="scroll_to_bottom"
             onClick={scrollToBottom}
             className={`${
-              microsoftConversation.length > 0 && isScroll && showScrollButton
+              codestralConversation.length > 0 &&
+              isScroll &&
+              document.body.scrollHeight > 800
                 ? "block"
                 : "hidden"
-            } border-solid border-[#4A4A4A] border translate-x-[-50%] top-[-45px] absolute rounded-full left-1/2 text-[#B9B9B9] bg-[#30374a]`}
+            } border-solid border-[#4A4A4A] border-[1px] translate-x-[-50%] top-[-45px] absolute rounded-full left-1/2 text-[#9A9A9B] bg-transparent hover:bg-[#2A2A2D] transition-all duration-300`}
+            // bg-[#212124]
           >
             <FaArrowDown size={30} className="py-2 px-2" />
           </button>
-
           {/* Input */}
           <input
-            placeholder="Ask Phi-4"
+            placeholder="Ask Codestral 25.01"
             value={inputMessage}
             onKeyDown={handleKeyDown}
             onChange={(e) => setInputMessage(e.target.value)}
-            className="pl-5 pr-[65px] py-6 focus:outline-none placeholder-[#828BAC] bg-[#151C2F] rounded-3xl w-full border-[6px] border-[#1B2235]"
+            className="pl-5 pr-[65px] py-6 focus:outline-none placeholder-[#919192] bg-[#222225] rounded-xl w-full overflow-hidden"
             ref={inputRef}
           />
-
           {/* Send Message Button */}
           <button
             id="send_message"
             title={`${
-              !microsoftMssgGenerated
+              !codestralMssgGenerated
                 ? "Generating..."
                 : inputMessage
                 ? "Send message"
                 : "Message is empty"
             }`}
             onClick={handleInputMessage}
-            disabled={!inputMessage || isLimit || !microsoftMssgGenerated}
-            style={{ display: !inputMessage ? "none" : "block" }}
-            className="absolute rounded-lg right-0 top-[50%]  text-[#E3CBBC] hover:bg-[#505B7B] bg-[#455172] translate-y-[-50%] mr-4"
+            disabled={!inputMessage || isLimit || !codestralMssgGenerated}
+            // style={{ right: !inputMessage ? "-80px" : "0" }}
+            className={`absolute transition-all right-0 duration-300 ease-in-out rounded-lg top-[50%] disabled:cursor-default  text-[#111115] bg-[#F4F4F5]  translate-y-[-50%] mr-4
+              ${!inputMessage ? "opacity-0" : "opacity-100"}
+              `}
+            // disabled:text-[#747476] disabled:bg-[#193669]
           >
-            {microsoftMssgGenerated ? (
-              <FaArrowUp size={35} className="p-2" />
+            {codestralMssgGenerated ? (
+              <FaArrowUp size={35} className="py-2 px-3" />
             ) : (
               <MdSquare size={35} className="p-2" />
             )}
           </button>
         </div>
-
         <div
           id="area_placeholder_bottom"
           className={`${
-            microsoftConversation.length > 0 ? "fixed block" : "hidden"
-          } w-full bottom-[-1px] h-[30px] text-[#E0CEBF] left-0`}
+            codestralConversation.length > 0 ? "fixed block" : "hidden"
+          } w-full bottom-[-1px] h-[30px] left-0`}
         ></div>
       </div>
     </div>

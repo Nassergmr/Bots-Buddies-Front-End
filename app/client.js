@@ -33,6 +33,7 @@ export default function Client({ children }) {
   const [isLoaded, setIsLoaded] = useState(false);
   const [isLimit, setIsLimit] = useState(false);
   const [isError, setIsError] = useState(false);
+  const [isUnavailable, setisUnavailable] = useState(false);
   const socketRef = useRef(null);
   const path = usePathname();
 
@@ -62,6 +63,11 @@ export default function Client({ children }) {
   const [core42MssgGenerated, setCore42MssgGenerated] = useState(true);
   const [isArabicLetters, setIsArabicLetters] = useState(true);
 
+  // Codestral
+  const [codestralMessage, setCodestralMessage] = useState("");
+  const [codestralConversation, setCodestralConversation] = useState([]);
+  const [codestralMssgGenerated, setCodestralMssgGenerated] = useState(true);
+
   // Alert user about errors
   useEffect(() => {
     if (isLimit) {
@@ -80,11 +86,26 @@ export default function Client({ children }) {
         </div>
       );
     }
+
+    if (isUnavailable) {
+      toast.error(
+        <div className="flex flex-col gap-3 mx-auto text-center">
+          <FaExclamationCircle size={32} className="text-[#E64D3C] mx-auto" />
+          <div className="text-white">
+            This model is currently unavailable, try again later
+          </div>
+        </div>
+      );
+    }
+
     if (isError) {
       toast.error(
         <div className="flex flex-col gap-3 mx-auto text-center">
           <FaExclamationCircle size={32} className="text-[#E64D3C] mx-auto" />
-          <div className="text-white">Something went wrong, try again</div>
+          <div className="text-white">
+            {" "}
+            This model is currently unavailable, try again later
+          </div>
           {path.includes("core") && (
             <div className="text-white">حدث خطأ ما، حاول مرة أخرى</div>
           )}
@@ -189,6 +210,23 @@ export default function Client({ children }) {
     }
   }, [path]);
 
+  // Codestral
+  useEffect(() => {
+    const savedMessages = getItem("codestral_conversation_storage");
+
+    if (savedMessages.length > 0) {
+      const updatedMessages = savedMessages.map((prev) => ({
+        ...prev,
+        animate: false,
+      }));
+      setCodestralConversation(updatedMessages);
+
+      if (path.includes("codestral")) {
+        setCodestralConversation(updatedMessages);
+      }
+    }
+  }, [path]);
+
   /* Save To LocalStorage */
   // Chatgpt
   useEffect(() => {
@@ -214,6 +252,11 @@ export default function Client({ children }) {
   useEffect(() => {
     setItem("core42_conversation_storage", core42Conversation);
   }, [core42Conversation]);
+
+  // Codestral
+  useEffect(() => {
+    setItem("codestral_conversation_storage", codestralConversation);
+  }, [codestralConversation]);
 
   // Send The Chatgpt User Message to The Server
   const handleSendChatgptUserMessage = (message) => {
@@ -250,6 +293,13 @@ export default function Client({ children }) {
         "core42_conversation",
         `(respond in Arabic) ${message}`
       );
+    }
+  };
+
+  // Send The Codestral User Message to The Server
+  const handleSendCodestralUserMessage = (message) => {
+    if (socketRef.current) {
+      socketRef.current.emit("codestral_conversation", message);
     }
   };
 
@@ -352,6 +402,23 @@ export default function Client({ children }) {
       );
     });
 
+    // Receive Codestral Response From The Server And Push It To The Conversation Array
+    socketRef.current.on("codestral_conversation", (CodestralMessage) => {
+      setCodestralMessage(CodestralMessage);
+      setCodestralConversation((prev) =>
+        prev
+          .map((msg, index) =>
+            index === prev.length - 1 ? { ...msg, isloading: false } : msg
+          )
+          .concat({
+            text: CodestralMessage,
+            isai: true,
+            animate: true,
+            isloading: false,
+          })
+      );
+    });
+
     // Let user send message only after ai response is finished generating
     socketRef.current.on("chatgpt_mssg_generated", () => {
       setChatgptMssgGenerated(true);
@@ -373,6 +440,10 @@ export default function Client({ children }) {
       setCore42MssgGenerated(true);
     });
 
+    socketRef.current.on("codestral_mssg_generated", () => {
+      setCodestralMssgGenerated(true);
+    });
+
     // Handle the rate limit error (ex: 50 requests a day) and any error
     socketRef.current.on("rate_limit_exceeded", () => {
       setIsLimit(true);
@@ -383,6 +454,20 @@ export default function Client({ children }) {
         setMicrosoftMssgGenerated(true);
         setXaiMssgGenerated(true);
         setCore42MssgGenerated(true);
+        setCodestralMssgGenerated(true);
+      }, 5000);
+    });
+
+    socketRef.current.on("model_unavailable", () => {
+      setisUnavailable(true);
+      setTimeout(() => {
+        setisUnavailable(false);
+        setChatgptMssgGenerated(true);
+        setMetaMssgGenerated(true);
+        setMicrosoftMssgGenerated(true);
+        setXaiMssgGenerated(true);
+        setCore42MssgGenerated(true);
+        setCodestralMssgGenerated(true);
       }, 5000);
     });
 
@@ -395,6 +480,7 @@ export default function Client({ children }) {
         setMicrosoftMssgGenerated(true);
         setXaiMssgGenerated(true);
         setCore42MssgGenerated(true);
+        setCodestralMssgGenerated(true);
       }, 5000);
     });
 
@@ -452,6 +538,13 @@ export default function Client({ children }) {
         setCore42MssgGenerated,
         isArabicLetters,
         setIsArabicLetters,
+
+        // Codestral
+        codestralConversation,
+        setCodestralConversation,
+        handleSendCodestralUserMessage,
+        codestralMssgGenerated,
+        setCodestralMssgGenerated,
       }}
     >
       <ToastContainer

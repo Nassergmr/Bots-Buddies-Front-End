@@ -5,8 +5,6 @@ import Image from "next/image";
 import { FaArrowDown } from "react-icons/fa6";
 import { MdSquare } from "react-icons/md";
 import { CiLocationArrow1 } from "react-icons/ci";
-// import { ToastContainer } from "react-toastify";
-// import { toast } from "react-toastify";
 import { Slide } from "react-toastify";
 import { MyContext } from "../../../client";
 import Messages from "../messages";
