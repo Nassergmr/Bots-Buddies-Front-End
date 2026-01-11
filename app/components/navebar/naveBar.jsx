@@ -89,6 +89,22 @@ export default function NaveBar() {
                 priority
               />
             </Link> */}
+            <Link
+              className={`cool_button gintoText ${
+                path.includes("phi") && buttonActive ? "clicked" : ""
+              }`}
+              href={"/models/phi"}
+              id="phi"
+            >
+              <Image
+                src={MicrosoftLogo}
+                width={30}
+                height={30}
+                alt=""
+                className="z-10"
+              />
+              <span>Microsoft</span>{" "}
+            </Link>
 
             <Link
               href={"/models/codestral"}
@@ -105,23 +121,6 @@ export default function NaveBar() {
                 className="z-10"
               />
               <span>Mistral</span>
-            </Link>
-
-            <Link
-              className={`cool_button gintoText ${
-                path.includes("phi") && buttonActive ? "clicked" : ""
-              }`}
-              href={"/models/phi"}
-              id="phi"
-            >
-              <Image
-                src={MicrosoftLogo}
-                width={30}
-                height={30}
-                alt=""
-                className="z-10"
-              />
-              <span>Microsoft</span>{" "}
             </Link>
 
             <Link

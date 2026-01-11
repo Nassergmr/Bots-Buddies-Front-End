@@ -231,9 +231,9 @@ export default function Chatgpt() {
             className="absolute rounded-full right-0 top-[50%] disabled:cursor-default disabled:text-[#2f2f2f] disabled:bg-[#676767] text-black bg-white hover:bg-[#C1C1C1] translate-y-[-50%] mr-4"
           >
             {chatgptMssgGenerated ? (
-              <FaArrowUp size={35} className="p-2" />
+              <FaArrowUp size={35} className="p-[9px]" />
             ) : (
-              <MdSquare size={35} className="p-2" />
+              <MdSquare size={35} className="p-[9px]" />
             )}
           </button>
         </div>

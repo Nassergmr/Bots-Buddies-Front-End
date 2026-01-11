@@ -67,23 +67,6 @@ export default function Drawer({
           <span>Meta</span>
         </Link>
 
-        <Link
-          href={"/models/codestral"}
-          id="codestral"
-          className={`cool_button interText !w-full !py-4 ${
-            path.includes("codestral") && buttonActive ? "clicked" : ""
-          }`}
-        >
-          <Image
-            src={mistralLogo}
-            width={28}
-            height={28}
-            alt=""
-            className="z-10"
-          />
-          <span>Mistral</span>
-        </Link>
-
         {/* <Link
           onClick={() => setOpenDrawer(false)}
           href={"/models/jais"}
@@ -118,6 +101,24 @@ export default function Drawer({
             className="z-10"
           />
           <span>Microsoft</span>{" "}
+        </Link>
+
+        <Link
+          onClick={() => setOpenDrawer(false)}
+          href={"/models/codestral"}
+          id="codestral"
+          className={`cool_button interText !w-full !py-4 ${
+            path.includes("codestral") && buttonActive ? "clicked" : ""
+          }`}
+        >
+          <Image
+            src={mistralLogo}
+            width={28}
+            height={28}
+            alt=""
+            className="z-10"
+          />
+          <span>Mistral</span>
         </Link>
 
         <Link

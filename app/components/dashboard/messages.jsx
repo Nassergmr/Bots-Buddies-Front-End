@@ -5,10 +5,9 @@ import ReactSpinner from "../elements/reactSpinner";
 import Icon from "../../assets/jais-icon.png";
 import mistral from "../../assets/m-boxed-orange.png";
 import BounceLoader from "react-spinners/BounceLoader";
-import PulseLoader from "react-spinners/PulseLoader";
 import DotLoader from "react-spinners/DotLoader";
 import PuffLoader from "react-spinners/PuffLoader";
-import CircleLoader from "react-spinners/CircleLoader";
+import PulseLoader from "react-spinners/PulseLoader";
 import { StaggeredFade } from "@/components/ui/staggeredFade";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { dracula } from "react-syntax-highlighter/dist/esm/styles/prism";
@@ -256,9 +255,9 @@ export default function Messages({
             {/* Loader While Waiting For Codestral Response */}
             {mssg.isloading && (
               <div className="">
-                <CircleLoader
+                <PulseLoader
                   color={"#ec4f13"}
-                  size={28}
+                  size={10}
                   speedMultiplier={0.7}
                   data-testid="loader"
                 />
@@ -316,7 +315,7 @@ export default function Messages({
               <div className="mt-3">
                 <PulseLoader
                   color={"#635EF2"}
-                  size={8}
+                  size={3}
                   speedMultiplier={0.7}
                   data-testid="loader"
                 />
