@@ -1,7 +1,11 @@
 {
   "compilerOptions": {
     "target": "ES2017",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": false,
@@ -12,10 +16,12 @@
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "jsx": "preserve",
+    "jsx": "react-jsx",
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./*"]
+      "@/*": [
+        "./*"
+      ]
     },
     "plugins": [
       {
@@ -28,7 +34,10 @@
     ".next/types/**/*.ts",
     "**/*.ts",
     "**/*.tsx",
-    "app/components/dashboard/deepseek/deepseek.jsx"
-  ],
-  "exclude": ["node_modules"]
+    "app/components/dashboard/deepseek/deepseek.jsx",
+    ".next/dev/types/**/*.ts"
+, "components/ui/animated-beam.jsx"  ],
+  "exclude": [
+    "node_modules"
+  ]
 }

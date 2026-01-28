@@ -21,6 +21,7 @@ export default function Microsoft() {
     isError,
     microsoftMssgGenerated,
     setMicrosoftMssgGenerated,
+    messages,
   } = useContext(MyContext);
 
   const [userMessage, setUserMessage] = useState("");
@@ -31,6 +32,7 @@ export default function Microsoft() {
 
   useEffect(() => {
     setBodyColor("#101524");
+    inputRef.current.focus();
   }, []);
 
   useEffect(() => {
@@ -102,13 +104,13 @@ export default function Microsoft() {
   };
 
   // Remove last message from the array when limit is reached or if there error
-  useEffect(() => {
-    if (isLimit || isError) {
-      setTimeout(() => {
-        setMicrosoftConversation((prev) => prev.slice(0, -1));
-      }, 4000);
-    }
-  }, [isLimit, isError]);
+  // useEffect(() => {
+  //   if (isLimit || isError) {
+  //     setTimeout(() => {
+  //       setMicrosoftConversation((prev) => prev.slice(0, -1));
+  //     }, 4000);
+  //   }
+  // }, [isLimit, isError]);
 
   const handleKeyDown = (e) => {
     if (microsoftMssgGenerated) {
@@ -166,7 +168,11 @@ export default function Microsoft() {
         id="messages_container"
         className={`px-1 mx-auto text-[#E1CEBF] mt-[100px] break-words whitespace-normal xl:w-[50%] lg:w-[60%] md:w-[70%] sm:w-[80%] w-[98%] z-20`}
       >
-        <Messages microsoftConversation={microsoftConversation} />
+        <Messages
+          microsoftConversation={microsoftConversation}
+          microsoftMssgGenerated={microsoftMssgGenerated}
+          messages={messages}
+        />
       </div>
 
       {/* Area Placeholder (make some space above input area) */}
@@ -217,7 +223,7 @@ export default function Microsoft() {
 
           {/* Input */}
           <input
-            placeholder="Ask Phi-4"
+            placeholder="Ask Phi-4-mini-instruct"
             value={inputMessage}
             onKeyDown={handleKeyDown}
             onChange={(e) => setInputMessage(e.target.value)}
@@ -232,8 +238,8 @@ export default function Microsoft() {
               !microsoftMssgGenerated
                 ? "Generating..."
                 : inputMessage
-                ? "Send message"
-                : "Message is empty"
+                  ? "Send message"
+                  : "Message is empty"
             }`}
             onClick={handleInputMessage}
             disabled={!inputMessage || isLimit || !microsoftMssgGenerated}

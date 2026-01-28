@@ -1,9 +1,11 @@
 "use client";
 
 import { useEffect, createContext, useState, useRef } from "react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { FaExclamationCircle } from "react-icons/fa";
 import { ToastContainer, toast, Zoom } from "react-toastify";
+import { useId } from "react";
+
 import "react-toastify/dist/ReactToastify.css";
 import io from "socket.io-client";
 
@@ -34,28 +36,39 @@ export default function Client({ children }) {
   const [isLimit, setIsLimit] = useState(false);
   const [isError, setIsError] = useState(false);
   const [isUnavailable, setisUnavailable] = useState(false);
+  const [message, setMessage] = useState("");
+  const [messages, setMessages] = useState([]);
+  const [model, setModel] = useState("");
+  const [replySelected, setReplySelected] = useState(false);
+
+  const router = useRouter();
   const socketRef = useRef(null);
   const path = usePathname();
+  const messageId = crypto.randomUUID();
 
   // Chatgpt
   const [chatgptMessage, setChatgptMessage] = useState("");
   const [chatgptConversation, setChatgptConversation] = useState([]);
   const [chatgptMssgGenerated, setChatgptMssgGenerated] = useState(true);
+  const [chatgptMssgGenerated2, setChatgptMssgGenerated2] = useState(true);
 
   // Meta
   const [metaMessage, setMetaMessage] = useState("");
   const [metaConversation, setMetaConversation] = useState([]);
   const [metaMssgGenerated, setMetaMssgGenerated] = useState(true);
+  const [metaMssgGenerated2, setMetaMssgGenerated2] = useState(true);
 
   // Microsoft
   const [microsoftMessage, setMicrosoftMessage] = useState("");
   const [microsoftConversation, setMicrosoftConversation] = useState([]);
   const [microsoftMssgGenerated, setMicrosoftMssgGenerated] = useState(true);
+  const [microsoftMssgGenerated2, setMicrosoftMssgGenerated2] = useState(true);
 
   // XAi
   const [xAiMessage, setXAiMessage] = useState("");
   const [xAiConversation, setXAiConversation] = useState([]);
   const [xaiMssgGenerated, setXaiMssgGenerated] = useState(true);
+  const [xaiMssgGenerated2, setXaiMssgGenerated2] = useState(true);
 
   // Core42
   const [core42Message, setCore42Message] = useState("");
@@ -67,6 +80,20 @@ export default function Client({ children }) {
   const [codestralMessage, setCodestralMessage] = useState("");
   const [codestralConversation, setCodestralConversation] = useState([]);
   const [codestralMssgGenerated, setCodestralMssgGenerated] = useState(true);
+  const [codestralMssgGenerated2, setCodestralMssgGenerated2] = useState(true);
+
+  // All Models
+  const [allModelsMessages, setAllModelsMessages] = useState([]);
+  const [allModelsConversation, setAllModelsConversation] = useState([]);
+  const [allModelsMssgGenerated, setAllModelsMssgGenerated] = useState(true);
+
+  const modelRoutes = {
+    "GPT-4.1": "/models/gpt",
+    "Llama 4 Scout 17B 16E Instruct": "/models/llama",
+    "Phi-4-mini-instruct": "/models/phi",
+    "Codestral 25.01": "/models/codestral",
+    "Grok 3 Mini": "/models/grok",
+  };
 
   // Alert user about errors
   useEffect(() => {
@@ -83,7 +110,7 @@ export default function Client({ children }) {
               لاحقًا
             </div>
           )}
-        </div>
+        </div>,
       );
     }
 
@@ -94,7 +121,7 @@ export default function Client({ children }) {
           <div className="text-white">
             This model is currently unavailable, try again later
           </div>
-        </div>
+        </div>,
       );
     }
 
@@ -102,14 +129,11 @@ export default function Client({ children }) {
       toast.error(
         <div className="flex flex-col gap-3 mx-auto text-center">
           <FaExclamationCircle size={32} className="text-[#E64D3C] mx-auto" />
-          <div className="text-white">
-            {" "}
-            This model is currently unavailable, try again later
-          </div>
+          <div className="text-white"> Something went wrong, try again</div>
           {path.includes("core") && (
             <div className="text-white">حدث خطأ ما، حاول مرة أخرى</div>
           )}
-        </div>
+        </div>,
       );
     }
     if (!isArabicLetters) {
@@ -118,7 +142,7 @@ export default function Client({ children }) {
           <FaExclamationCircle size={32} className="text-[#4298DB] mx-auto" />
           <div>Only Arabic letters are allowed</div>
           <div>يُسمح فقط بالحروف العربية</div>
-        </div>
+        </div>,
       );
     }
   }, [isLimit, isError, isArabicLetters, path]);
@@ -227,6 +251,32 @@ export default function Client({ children }) {
     }
   }, [path]);
 
+  // All Models
+  useEffect(() => {
+    const savedMessages = getItem("allModels_conversation_storage");
+
+    if (savedMessages.length > 0) {
+      const updatedMessages = savedMessages.map((prev) => ({
+        ...prev,
+        animate: false,
+      }));
+      setAllModelsConversation(updatedMessages);
+
+      if (path.includes("parallel")) {
+        setAllModelsConversation(updatedMessages);
+      }
+    }
+  }, [path]);
+
+  // Reply messages
+  useEffect(() => {
+    const savedMessages = getItem("reply_messages_conversation_storage");
+
+    if (savedMessages.length > 0) {
+      setMessages(savedMessages);
+    }
+  }, []);
+
   /* Save To LocalStorage */
   // Chatgpt
   useEffect(() => {
@@ -257,6 +307,16 @@ export default function Client({ children }) {
   useEffect(() => {
     setItem("codestral_conversation_storage", codestralConversation);
   }, [codestralConversation]);
+
+  // All Models
+  useEffect(() => {
+    setItem("allModels_conversation_storage", allModelsConversation);
+  }, [allModelsConversation]);
+
+  // Reply Messages
+  useEffect(() => {
+    setItem("reply_messages_conversation_storage", messages);
+  }, [messages]);
 
   // Send The Chatgpt User Message to The Server
   const handleSendChatgptUserMessage = (message) => {
@@ -291,7 +351,7 @@ export default function Client({ children }) {
     if (socketRef.current) {
       socketRef.current.emit(
         "core42_conversation",
-        `(respond in Arabic) ${message}`
+        `(respond in Arabic) ${message}`,
       );
     }
   };
@@ -303,8 +363,158 @@ export default function Client({ children }) {
     }
   };
 
+  // Send The All Models User Message to The Server
+  const handleSendAllModelsUserMessage = (message) => {
+    if (socketRef.current) {
+      socketRef.current.emit("chatgpt_conversation_2", message);
+      socketRef.current.emit("meta_conversation_2", message);
+      socketRef.current.emit("microsoft_conversation_2", message);
+      socketRef.current.emit("xai_conversation_2", message);
+      socketRef.current.emit("codestral_conversation_2", message);
+    }
+    setChatgptMssgGenerated2(false);
+    setMetaMssgGenerated2(false);
+    setMicrosoftMssgGenerated2(false);
+    setCodestralMssgGenerated2(false);
+    setXaiMssgGenerated2(false);
+  };
+
+  // Send The User Reply Message to The Server
+  const handleSendSpecificModelUserMessage = (userMessage) => {
+    if (socketRef.current) {
+      if (model === "GPT-4.1") {
+        socketRef.current.emit(
+          "chatgpt_conversation_2",
+          `this is your message: ${message.slice(0, 250)}..., reply to the following reply to that message: "${userMessage}", don't mention its a reply.`,
+        );
+        setChatgptMssgGenerated2(false);
+        setMessage("");
+        setReplySelected(false);
+      } else if (model === "Llama 4 Scout 17B 16E Instruct") {
+        socketRef.current.emit(
+          "meta_conversation_2",
+          `this is your message: ${message.slice(0, 250)}..., reply to the following reply to that message: "${userMessage}", don't mention its a reply.`,
+        );
+        setMetaMssgGenerated2(false);
+        setMessage("");
+        setReplySelected(false);
+      } else if (model === "Phi-4-mini-instruct") {
+        socketRef.current.emit(
+          "microsoft_conversation_2",
+          `this is your message: ${message.slice(0, 250)}..., reply to the following reply to that message: "${userMessage}", don't mention its a reply.`,
+        );
+        setMicrosoftMssgGenerated2(false);
+        setMessage("");
+        setReplySelected(false);
+      } else if (model === "Codestral 25.01") {
+        socketRef.current.emit(
+          "codestral_conversation_2",
+          `this is your message: ${message.slice(0, 250)}..., reply to the following reply to that message: "${userMessage}", don't mention its a reply.`,
+        );
+        setCodestralMssgGenerated2(false);
+        setMessage("");
+        setReplySelected(false);
+      } else if (model === "Grok 3 Mini") {
+        socketRef.current.emit(
+          "xai_conversation_2",
+          `this is your message: ${message.slice(0, 250)}..., reply to the following reply to that message: "${userMessage}", don't mention its a reply.`,
+        );
+        setXaiMssgGenerated2(false);
+        setMessage("");
+        setReplySelected(false);
+      }
+      // Push The User Message To The Conversation Array
+      setAllModelsConversation((prev) => [
+        ...prev,
+        {
+          messageId: messageId,
+          text: userMessage,
+          animate: false,
+          isloading: true,
+        },
+      ]);
+
+      setMessages((prev) => [
+        ...prev,
+        { messageId: messageId, userMessage: userMessage, message: message },
+      ]);
+    }
+  };
+
+  // Send The User Reply Message to The Server (Move to the model chat)
+  const handleSendSpecificModelUserMessage2 = (userMessage) => {
+    if (socketRef.current) {
+      if (model === "GPT-4.1") {
+        setChatgptConversation((prev) => [
+          ...prev,
+          { text: userMessage, animate: false, isloading: true },
+        ]);
+        socketRef.current.emit(
+          "chatgpt_conversation",
+          `this is your message: ${message.slice(0, 250)}..., reply to the following reply to that message: "${userMessage}", don't mention its a reply.`,
+        );
+        setChatgptMssgGenerated(false);
+        setMessage("");
+        setReplySelected(false);
+      } else if (model === "Llama 4 Scout 17B 16E Instruct") {
+        setMetaConversation((prev) => [
+          ...prev,
+          { text: userMessage, animate: false, isloading: true },
+        ]);
+        socketRef.current.emit(
+          "meta_conversation",
+          `this is your message: ${message.slice(0, 250)}..., reply to the following reply to that message: "${userMessage}", don't mention its a reply.`,
+        );
+        setMetaMssgGenerated(false);
+        setMessage("");
+        setReplySelected(false);
+      } else if (model === "Phi-4-mini-instruct") {
+        setMicrosoftConversation((prev) => [
+          ...prev,
+          { text: userMessage, animate: false, isloading: true },
+        ]);
+        socketRef.current.emit(
+          "microsoft_conversation",
+          `this is your message: ${message.slice(0, 250)}..., reply to the following reply to that message: "${userMessage}", don't mention its a reply.`,
+        );
+        setMicrosoftMssgGenerated(false);
+        setMessage("");
+        setReplySelected(false);
+      } else if (model === "Codestral 25.01") {
+        setCodestralConversation((prev) => [
+          ...prev,
+          { text: userMessage, animate: false, isloading: true },
+        ]);
+        socketRef.current.emit(
+          "codestral_conversation",
+          `this is your message: ${message.slice(0, 250)}..., reply to the following reply to that message: "${userMessage}", don't mention its a reply.`,
+        );
+        setCodestralMssgGenerated(false);
+        setMessage("");
+        setReplySelected(false);
+      } else if (model === "Grok 3 Mini") {
+        setXAiConversation((prev) => [
+          ...prev,
+          { text: userMessage, animate: false, isloading: true },
+        ]);
+        socketRef.current.emit(
+          "xai_conversation",
+          `this is your message: ${message.slice(0, 250)}..., reply to the following reply to that message: "${userMessage}", don't mention its a reply.`,
+        );
+        setXaiMssgGenerated(false);
+        setMessage("");
+        setReplySelected(false);
+      }
+      router.push(modelRoutes[model]);
+    }
+    setMessages((prev) => [
+      ...prev,
+      { messageId: messageId, userMessage: userMessage, message: message },
+    ]);
+  };
+
+  // Creating a socket instance and connecting to the WebSocket server
   useEffect(() => {
-    // Creating a socket instance and connecting to the WebSocket server
     const socketUrl = process.env.NEXT_PUBLIC_SOCKET_URL;
     socketRef.current = io(socketUrl);
 
@@ -312,7 +522,7 @@ export default function Client({ children }) {
     socketRef.current.on(`connect`, () => {
       if (process.env.NODE_ENV === "development") {
         console.log(
-          `Connected Successfully from Client Side, id: ${socketRef.current.id}`
+          `Connected Successfully from Client Side, id: ${socketRef.current.id}`,
         );
       }
     });
@@ -320,69 +530,57 @@ export default function Client({ children }) {
     // Receive ChatGPT Response From The Server And Push It To The Conversation Array
     socketRef.current.on("chatgpt_conversation", (ChatGptmessage) => {
       setChatgptMessage(ChatGptmessage);
-      setChatgptConversation((prev) =>
-        prev
-          .map((msg, index) =>
-            index === prev.length - 1 ? { ...msg, isloading: false } : msg
-          )
-          .concat({
-            text: ChatGptmessage,
-            isai: true,
-            animate: true,
-            isloading: false,
-          })
-      );
+      setChatgptConversation((prev) => [
+        ...prev,
+        {
+          text: ChatGptmessage,
+          isai: true,
+          animate: true,
+          isloading: false,
+        },
+      ]);
     });
 
     // Receive Meta Response From The Server And Push It To The Conversation Array
     socketRef.current.on("meta_conversation", (MetaMessage) => {
       setMetaMessage(MetaMessage);
-      setMetaConversation((prev) =>
-        prev
-          .map((msg, index) =>
-            index === prev.length - 1 ? { ...msg, isloading: false } : msg
-          )
-          .concat({
-            text: MetaMessage,
-            isai: true,
-            animate: true,
-            isloading: false,
-          })
-      );
+      setMetaConversation((prev) => [
+        ...prev,
+        {
+          text: MetaMessage,
+          isai: true,
+          animate: true,
+          isloading: false,
+        },
+      ]);
     });
 
     // Receive Microsoft Response From The Server And Push It To The Conversation Array
     socketRef.current.on("microsoft_conversation", (MicrosoftMessage) => {
       setMicrosoftMessage(MicrosoftMessage);
-      setMicrosoftConversation((prev) =>
-        prev
-          .map((msg, index) =>
-            index === prev.length - 1 ? { ...msg, isloading: false } : msg
-          )
-          .concat({
-            text: MicrosoftMessage,
-            isai: true,
-            animate: true,
-            isloading: false,
-          })
-      );
+      setMicrosoftConversation((prev) => [
+        ...prev,
+        {
+          text: MicrosoftMessage,
+          isai: true,
+          animate: true,
+          isloading: false,
+        },
+      ]);
     });
 
     // Receive XAi Response From The Server And Push It To The Conversation Array
     socketRef.current.on("xai_conversation", (XAiMessage) => {
       setXAiMessage(XAiMessage);
-      setXAiConversation((prev) =>
-        prev
-          .map((msg, index) =>
-            index === prev.length - 1 ? { ...msg, isloading: false } : msg
-          )
-          .concat({
-            text: XAiMessage,
-            isai: true,
-            animate: true,
-            isloading: false,
-          })
-      );
+      setXAiConversation((prev) => [
+        ...prev,
+        {
+          text: XAiMessage,
+          isai: true,
+          animate: true,
+          isloading: false,
+        },
+      ]);
     });
 
     // Receive Core42 Response From The Server And Push It To The Conversation Array
@@ -391,35 +589,102 @@ export default function Client({ children }) {
       setCore42Conversation((prev) =>
         prev
           .map((msg, index) =>
-            index === prev.length - 1 ? { ...msg, isloading: false } : msg
+            index === prev.length - 1 ? { ...msg, isloading: false } : msg,
           )
           .concat({
             text: Core42Message,
             isai: true,
             animate: true,
             isloading: false,
-          })
+          }),
       );
     });
 
     // Receive Codestral Response From The Server And Push It To The Conversation Array
     socketRef.current.on("codestral_conversation", (CodestralMessage) => {
       setCodestralMessage(CodestralMessage);
-      setCodestralConversation((prev) =>
-        prev
-          .map((msg, index) =>
-            index === prev.length - 1 ? { ...msg, isloading: false } : msg
-          )
-          .concat({
-            text: CodestralMessage,
-            isai: true,
-            animate: true,
-            isloading: false,
-          })
-      );
+      setCodestralConversation((prev) => [
+        ...prev,
+        {
+          text: CodestralMessage,
+          isai: true,
+          animate: true,
+          isloading: false,
+        },
+      ]);
     });
 
-    // Let user send message only after ai response is finished generating
+    // Receive GPT Response From The Server And Push It To AllModels Conversation Array
+    socketRef.current.on("chatgpt_conversation_2", (ChatGptmessage) => {
+      setChatgptMessage(ChatGptmessage);
+      setAllModelsConversation((prev) => [
+        ...prev,
+        {
+          model: "GPT-4.1",
+          text: ChatGptmessage,
+          isai: true,
+          animate: true,
+        },
+      ]);
+    });
+
+    // Receive Meta Response From The Server And Push It To AllModels Conversation Array
+    socketRef.current.on("meta_conversation_2", (MetaMessage) => {
+      setMetaMessage(MetaMessage);
+      setAllModelsConversation((prev) => [
+        ...prev,
+        {
+          model: "Llama 4 Scout 17B 16E Instruct",
+          text: MetaMessage,
+          isai: true,
+          animate: true,
+        },
+      ]);
+    });
+
+    // Receive Microsoft Response From The Server And Push It To AllModels Conversation Array
+    socketRef.current.on("microsoft_conversation_2", (MicrosoftMessage) => {
+      setMicrosoftMessage(MicrosoftMessage);
+      setAllModelsConversation((prev) => [
+        ...prev,
+        {
+          model: "Phi-4-mini-instruct",
+          text: MicrosoftMessage,
+          isai: true,
+          animate: true,
+        },
+      ]);
+    });
+
+    // Receive XAi Response From The Server And Push It To AllModels Conversation Array
+    socketRef.current.on("xai_conversation_2", (XAiMessage) => {
+      setXAiMessage(XAiMessage);
+      setAllModelsConversation((prev) => [
+        ...prev,
+        {
+          model: "Grok 3 Mini",
+          text: XAiMessage,
+          isai: true,
+          animate: true,
+        },
+      ]);
+    });
+
+    // Receive Codestral Response From The Server And Push It To AllModels Conversation Array
+    socketRef.current.on("codestral_conversation_2", (CodestralMessage) => {
+      setCodestralMessage(CodestralMessage);
+      setAllModelsConversation((prev) => [
+        ...prev,
+        {
+          model: "Codestral 25.01",
+          text: CodestralMessage,
+          isai: true,
+          animate: true,
+        },
+      ]);
+    });
+
+    // Hide loader after ai response finished generating
     socketRef.current.on("chatgpt_mssg_generated", () => {
       setChatgptMssgGenerated(true);
     });
@@ -444,6 +709,50 @@ export default function Client({ children }) {
       setCodestralMssgGenerated(true);
     });
 
+    socketRef.current.on("chatgpt_mssg_generated_2", () => {
+      setChatgptMssgGenerated2(true);
+      setMetaMssgGenerated2(true);
+      setMicrosoftMssgGenerated2(true);
+      setXaiMssgGenerated2(true);
+      setCodestralMssgGenerated2(true);
+    });
+
+    socketRef.current.on("meta_mssg_generated_2", () => {
+      setChatgptMssgGenerated2(true);
+      setMetaMssgGenerated2(true);
+      setMicrosoftMssgGenerated2(true);
+      setXaiMssgGenerated2(true);
+      setCodestralMssgGenerated2(true);
+    });
+
+    socketRef.current.on("microsoft_mssg_generated_2", () => {
+      setChatgptMssgGenerated2(true);
+      setMetaMssgGenerated2(true);
+      setMicrosoftMssgGenerated2(true);
+      setXaiMssgGenerated2(true);
+      setCodestralMssgGenerated2(true);
+    });
+
+    socketRef.current.on("xai_mssg_generated_2", () => {
+      setChatgptMssgGenerated2(true);
+      setMetaMssgGenerated2(true);
+      setMicrosoftMssgGenerated2(true);
+      setXaiMssgGenerated2(true);
+      setCodestralMssgGenerated2(true);
+    });
+
+    socketRef.current.on("core42_mssg_generated_2", () => {
+      setCore42MssgGenerated2(true);
+    });
+
+    socketRef.current.on("codestral_mssg_generated_2", () => {
+      setChatgptMssgGenerated2(true);
+      setMetaMssgGenerated2(true);
+      setMicrosoftMssgGenerated2(true);
+      setXaiMssgGenerated2(true);
+      setCodestralMssgGenerated2(true);
+    });
+
     // Handle the rate limit error (ex: 50 requests a day) and any error
     socketRef.current.on("rate_limit_exceeded", () => {
       setIsLimit(true);
@@ -455,6 +764,11 @@ export default function Client({ children }) {
         setXaiMssgGenerated(true);
         setCore42MssgGenerated(true);
         setCodestralMssgGenerated(true);
+        setChatgptMssgGenerated2(true);
+        setMetaMssgGenerated2(true);
+        setMicrosoftMssgGenerated2(true);
+        setXaiMssgGenerated2(true);
+        setCodestralMssgGenerated2(true);
       }, 5000);
     });
 
@@ -468,6 +782,11 @@ export default function Client({ children }) {
         setXaiMssgGenerated(true);
         setCore42MssgGenerated(true);
         setCodestralMssgGenerated(true);
+        setChatgptMssgGenerated2(true);
+        setMetaMssgGenerated2(true);
+        setMicrosoftMssgGenerated2(true);
+        setXaiMssgGenerated2(true);
+        setCodestralMssgGenerated2(true);
       }, 5000);
     });
 
@@ -481,6 +800,11 @@ export default function Client({ children }) {
         setXaiMssgGenerated(true);
         setCore42MssgGenerated(true);
         setCodestralMssgGenerated(true);
+        setChatgptMssgGenerated2(true);
+        setMetaMssgGenerated2(true);
+        setMicrosoftMssgGenerated2(true);
+        setXaiMssgGenerated2(true);
+        setCodestralMssgGenerated2(true);
       }, 5000);
     });
 
@@ -501,6 +825,14 @@ export default function Client({ children }) {
         socketRef,
         isLimit,
         isError,
+        message,
+        setMessage,
+        model,
+        setModel,
+        replySelected,
+        setReplySelected,
+        handleSendSpecificModelUserMessage,
+        handleSendSpecificModelUserMessage2,
 
         // ChatGPT
         chatgptConversation,
@@ -508,6 +840,8 @@ export default function Client({ children }) {
         handleSendChatgptUserMessage,
         chatgptMssgGenerated,
         setChatgptMssgGenerated,
+        chatgptMssgGenerated2,
+        setChatgptMssgGenerated2,
 
         // Meta
         metaConversation,
@@ -515,6 +849,8 @@ export default function Client({ children }) {
         handleSendMetaUserMessage,
         metaMssgGenerated,
         setMetaMssgGenerated,
+        metaMssgGenerated2,
+        setMetaMssgGenerated2,
 
         // Microsoft
         microsoftConversation,
@@ -522,6 +858,8 @@ export default function Client({ children }) {
         handleSendMicrosoftUserMessage,
         microsoftMssgGenerated,
         setMicrosoftMssgGenerated,
+        microsoftMssgGenerated2,
+        setMicrosoftMssgGenerated2,
 
         // XAi
         xAiConversation,
@@ -529,6 +867,8 @@ export default function Client({ children }) {
         handleSendXAiUserMessage,
         xaiMssgGenerated,
         setXaiMssgGenerated,
+        xaiMssgGenerated2,
+        setXaiMssgGenerated2,
 
         // Core42
         core42Conversation,
@@ -545,6 +885,17 @@ export default function Client({ children }) {
         handleSendCodestralUserMessage,
         codestralMssgGenerated,
         setCodestralMssgGenerated,
+        codestralMssgGenerated2,
+        setCodestralMssgGenerated2,
+
+        // All Models
+        allModelsConversation,
+        setAllModelsConversation,
+        handleSendAllModelsUserMessage,
+        allModelsMssgGenerated,
+        setAllModelsMssgGenerated,
+        messages,
+        setMessages,
       }}
     >
       <ToastContainer

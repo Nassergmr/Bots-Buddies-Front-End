@@ -12,6 +12,7 @@ import XAiLogo from "../../assets/logos/xai.png";
 import Chatgpt from "../dashboard/open-ai/chatgpt";
 import Core42Logo from "../../assets/logos/core42.png";
 import mistralLogo from "../../assets/logos/mistral.png";
+import aiLogo from "../../assets/logos/hap9u2himk4iqv3uvkujk6dk0v.png";
 import Drawer from "./drawer";
 
 export default function NaveBar() {
@@ -138,6 +139,23 @@ export default function NaveBar() {
                 className="z-10"
               />
               <span>xAI</span>
+            </Link>
+
+            <Link
+              href={"/parallel"}
+              id="all"
+              className={`cool_button googleText ${
+                path.includes("parallel") && buttonActive ? "clicked" : ""
+              }`}
+            >
+              <Image
+                src={aiLogo}
+                width={40}
+                height={40}
+                alt=""
+                className="z-10"
+              />
+              <span className="right-1.5 relative">Parallel</span>
             </Link>
           </div>
 

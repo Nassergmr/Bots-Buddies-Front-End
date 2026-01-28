@@ -25,6 +25,7 @@ export default function Meta() {
     isError,
     metaMssgGenerated,
     setMetaMssgGenerated,
+    messages,
   } = useContext(MyContext);
 
   const [userMessage, setUserMessage] = useState("");
@@ -35,6 +36,7 @@ export default function Meta() {
 
   useEffect(() => {
     setBodyColor("#101112");
+    inputRef.current.focus();
   }, []);
 
   useEffect(() => {
@@ -106,13 +108,13 @@ export default function Meta() {
   };
 
   // Remove last message from the array when limit is reached or if there error
-  useEffect(() => {
-    if (isLimit || isError) {
-      setTimeout(() => {
-        setMetaConversation((prev) => prev.slice(0, -1));
-      }, 4000);
-    }
-  }, [isLimit, isError]);
+  // useEffect(() => {
+  //   if (isLimit || isError) {
+  //     setTimeout(() => {
+  //       setMetaConversation((prev) => prev.slice(0, -1));
+  //     }, 4000);
+  //   }
+  // }, [isLimit, isError]);
 
   const handleKeyDown = (e) => {
     if (metaMssgGenerated) {
@@ -170,7 +172,11 @@ export default function Meta() {
         id="messages_container"
         className={`px-1 mx-auto mt-[100px] text-[#F3F4F5] break-words whitespace-normal z-20 xl:w-[50%] lg:w-[60%] md:w-[70%] sm:w-[80%] w-[98%]`}
       >
-        <Messages metaConversation={metaConversation} />
+        <Messages
+          messages={messages}
+          metaConversation={metaConversation}
+          metaMssgGenerated={metaMssgGenerated}
+        />
       </div>
 
       {/* Area Placeholder (make some space above input area) */}
@@ -233,8 +239,8 @@ export default function Meta() {
               !metaMssgGenerated
                 ? "Generating..."
                 : inputMessage
-                ? "Send message"
-                : "Message is empty"
+                  ? "Send message"
+                  : "Message is empty"
             }`}
             onClick={handleInputMessage}
             disabled={!inputMessage || isLimit || !metaMssgGenerated}

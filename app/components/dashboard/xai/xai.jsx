@@ -24,6 +24,7 @@ export default function XAi() {
     isError,
     xaiMssgGenerated,
     setXaiMssgGenerated,
+    messages,
   } = useContext(MyContext);
 
   const [userMessage, setUserMessage] = useState("");
@@ -34,6 +35,7 @@ export default function XAi() {
 
   useEffect(() => {
     setBodyColor("#151718");
+    inputRef.current.focus();
   }, []);
 
   useEffect(() => {
@@ -89,7 +91,7 @@ export default function XAi() {
     if (inputMessage.trim() !== "" && !isLimit && !isError) {
       inputRef.current?.blur(); // hide the keyboard when message is sent (on mobile)
       setUserMessage(inputMessage);
-      handleSendXAiUserMessage(inputMessage); // Send The User Message To Chatgpt Api
+      handleSendXAiUserMessage(inputMessage); // Send The User Message To xAI Api
       setXaiMssgGenerated(false);
       setInputMessage("");
       setXAiConversation((prev) => [
@@ -105,13 +107,13 @@ export default function XAi() {
   };
 
   // Remove last message from the array when limit is reached or if there error
-  useEffect(() => {
-    if (isLimit || isError) {
-      setTimeout(() => {
-        setXAiConversation((prev) => prev.slice(0, -1));
-      }, 4000);
-    }
-  }, [isLimit, isError]);
+  // useEffect(() => {
+  //   if (isLimit || isError) {
+  //     setTimeout(() => {
+  //       setXAiConversation((prev) => prev.slice(0, -1));
+  //     }, 4000);
+  //   }
+  // }, [isLimit, isError]);
 
   const handleKeyDown = (e) => {
     if (xaiMssgGenerated) {
@@ -168,7 +170,11 @@ export default function XAi() {
         id="messages_container"
         className={`px-1 mx-auto mt-[100px] break-words whitespace-normal xl:w-[50%] lg:w-[60%] md:w-[70%] sm:w-[80%] z-20 relative`}
       >
-        <Messages xAiConversation={xAiConversation} />
+        <Messages
+          xAiConversation={xAiConversation}
+          xaiMssgGenerated={xaiMssgGenerated}
+          messages={messages}
+        />
       </div>
 
       {/* Area Placeholder (make some space above input area) */}
@@ -235,8 +241,8 @@ export default function XAi() {
               !xaiMssgGenerated
                 ? "Generating..."
                 : inputMessage
-                ? "Send message"
-                : "Message is empty"
+                  ? "Send message"
+                  : "Message is empty"
             }`}
             onClick={handleInputMessage}
             disabled={!inputMessage || isLimit || !xaiMssgGenerated}

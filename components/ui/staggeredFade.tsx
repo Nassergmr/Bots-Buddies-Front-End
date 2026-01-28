@@ -17,7 +17,7 @@ export const StaggeredFade: React.FC<TextStaggeredFadeProps> = ({
     show: (i: number) => ({
       y: 0,
       opacity: 1,
-      transition: { delay: i * 0.02 },
+      transition: { delay: i * 0.01 },
     }),
   };
 

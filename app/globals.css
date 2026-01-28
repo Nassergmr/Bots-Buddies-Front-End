@@ -199,12 +199,32 @@ pre div {
   font-family: var(--font-inter), sans-serif;
 }
 
+.googleText {
+  font-family: var(--font-google), sans-serif;
+}
+
 #overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
+}
+
+@keyframes floatUpDown {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+.floating {
+  animation: floatUpDown 2s ease-in-out infinite;
 }
 
 @layer base {
@@ -270,4 +290,62 @@ pre div {
   body {
     @apply bg-background text-foreground;
   }
+}
+/* From Uiverse.io by SelfMadeSystem */
+/* Hide the default checkbox */
+.container input {
+  display: none;
+}
+
+.container {
+  position: relative;
+  cursor: pointer;
+  font-size: 20px;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Create a custom checkbox */
+.checkmark {
+  position: relative;
+  top: 0;
+  left: 0;
+  height: 1.05em;
+  width: 1.05em;
+  background-color: #c3c7c5;
+  border-radius: 0.25em;
+  transition: all 0.25s;
+}
+
+/* When the checkbox is checked, add a blue background */
+.container input:checked ~ .checkmark {
+  background-color: #fca5a5;
+}
+
+/* Create the checkmark/indicator (hidden when not checked) */
+.checkmark:after {
+  content: "";
+  position: absolute;
+  transform: rotate(0deg);
+  border: 0.1em solid #c3c7c5;
+  left: 0;
+  top: 0;
+  width: 1.05em;
+  height: 1.05em;
+  border-radius: 0.25em;
+  transition:
+    all 0.25s,
+    border-width 0.1s;
+}
+
+/* Show the checkmark when checked */
+.container input:checked ~ .checkmark:after {
+  left: 0.45em;
+  top: 0.25em;
+  width: 0.25em;
+  height: 0.5em;
+  border-color: #fff0 white white #fff0;
+  border-width: 0 0.15em 0.15em 0;
+  border-radius: 0em;
+  transform: rotate(45deg);
 }

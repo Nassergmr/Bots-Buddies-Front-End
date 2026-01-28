@@ -21,6 +21,7 @@ export default function Chatgpt() {
     isError,
     chatgptMssgGenerated,
     setChatgptMssgGenerated,
+    messages,
   } = useContext(MyContext);
 
   const [userMessage, setUserMessage] = useState("");
@@ -31,6 +32,7 @@ export default function Chatgpt() {
 
   useEffect(() => {
     setBodyColor("#212121");
+    inputRef.current.focus();
   }, []);
 
   useEffect(() => {
@@ -103,13 +105,13 @@ export default function Chatgpt() {
   };
 
   // Remove last message from the array when limit is reached or if there error
-  useEffect(() => {
-    if (isLimit || isError) {
-      setTimeout(() => {
-        setChatgptConversation((prev) => prev.slice(0, -1));
-      }, 4000);
-    }
-  }, [isLimit, isError]);
+  // useEffect(() => {
+  //   if (isLimit || isError) {
+  //     setTimeout(() => {
+  //       setChatgptConversation((prev) => prev.slice(0, -1));
+  //     }, 4000);
+  //   }
+  // }, [isLimit, isError]);
 
   const handleKeyDown = (e) => {
     if (chatgptMssgGenerated) {
@@ -161,7 +163,11 @@ export default function Chatgpt() {
         id="messages_container"
         className={`px-1 mx-auto mt-[100px] break-words whitespace-normal xl:w-[50%] lg:w-[60%] md:w-[70%] sm:w-[80%] w-[98%] z-[20]`}
       >
-        <Messages chatgptConversation={chatgptConversation} />
+        <Messages
+          chatgptConversation={chatgptConversation}
+          chatgptMssgGenerated={chatgptMssgGenerated}
+          messages={messages}
+        />
       </div>
 
       {/* Area Placeholder (make some space above input area) */}
@@ -223,8 +229,8 @@ export default function Chatgpt() {
               !chatgptMssgGenerated
                 ? "Generating..."
                 : inputMessage
-                ? "Send message"
-                : "Message is empty"
+                  ? "Send message"
+                  : "Message is empty"
             }`}
             onClick={handleInputMessage}
             disabled={!inputMessage || isLimit || !chatgptMssgGenerated}

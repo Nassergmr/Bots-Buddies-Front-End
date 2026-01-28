@@ -6,6 +6,7 @@ import MicrosoftLogo from "../../assets/logos/microsoft.png";
 import XAiLogo from "../../assets/logos/xai.png";
 import mistralLogo from "../../assets/logos/mistral.png";
 import Core42Logo from "../../assets/logos/core42.png";
+import aiLogo from "../../assets/logos/hap9u2himk4iqv3uvkujk6dk0v.png";
 import { IoMdClose } from "react-icons/io";
 
 export default function Drawer({
@@ -131,6 +132,18 @@ export default function Drawer({
         >
           <Image src={XAiLogo} width={30} height={30} alt="" className="z-10" />
           <span>xAI</span>
+        </Link>
+
+        <Link
+          onClick={() => setOpenDrawer(false)}
+          href={"/parallel"}
+          id="all"
+          className={`cool_button gintoText !w-full !py-4 ${
+            path.includes("parallel") && buttonActive ? "clicked" : ""
+          }`}
+        >
+          <Image src={aiLogo} width={40} height={40} alt="" className="z-10" />
+          <span className="right-1.5 relative">Parallel</span>
         </Link>
       </div>
     </>

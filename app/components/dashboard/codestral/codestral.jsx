@@ -26,6 +26,7 @@ export default function Codestral() {
     isError,
     codestralMssgGenerated,
     setCodestralMssgGenerated,
+    messages,
   } = useContext(MyContext);
 
   const [userMessage, setUserMessage] = useState("");
@@ -36,6 +37,7 @@ export default function Codestral() {
 
   useEffect(() => {
     setBodyColor("#18181B");
+    inputRef.current.focus();
   }, []);
 
   useEffect(() => {
@@ -107,13 +109,13 @@ export default function Codestral() {
   };
 
   // Remove last message from the array when limit is reached or if there error
-  useEffect(() => {
-    if (isLimit || isError) {
-      setTimeout(() => {
-        setCodestralConversation((prev) => prev.slice(0, -1));
-      }, 4000);
-    }
-  }, [isLimit, isError]);
+  // useEffect(() => {
+  //   if (isLimit || isError) {
+  //     setTimeout(() => {
+  //       setCodestralConversation((prev) => prev.slice(0, -1));
+  //     }, 4000);
+  //   }
+  // }, [isLimit, isError]);
 
   const handleKeyDown = (e) => {
     if (codestralMssgGenerated) {
@@ -171,7 +173,11 @@ export default function Codestral() {
         id="messages_container"
         className={`px-1 mx-auto mt-[100px] text-[#FEFEF7] break-words whitespace-normal z-20 xl:w-[50%] lg:w-[60%] md:w-[70%] sm:w-[80%] w-[98%]`}
       >
-        <Messages codestralConversation={codestralConversation} />
+        <Messages
+          codestralConversation={codestralConversation}
+          codestralMssgGenerated={codestralMssgGenerated}
+          messages={messages}
+        />
       </div>
 
       {/* Area Placeholder (make some space above input area) */}
@@ -241,8 +247,8 @@ export default function Codestral() {
               !codestralMssgGenerated
                 ? "Generating..."
                 : inputMessage
-                ? "Send message"
-                : "Message is empty"
+                  ? "Send message"
+                  : "Message is empty"
             }`}
             onClick={handleInputMessage}
             disabled={!inputMessage || isLimit || !codestralMssgGenerated}
