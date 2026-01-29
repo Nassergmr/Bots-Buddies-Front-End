@@ -22,6 +22,12 @@ export default function Chatgpt() {
     chatgptMssgGenerated,
     setChatgptMssgGenerated,
     messages,
+    highlitedMessage,
+    setIsHighlited,
+    setHighlitedMessage,
+    targetRef,
+    router,
+    isHighlited,
   } = useContext(MyContext);
 
   const [userMessage, setUserMessage] = useState("");
@@ -89,14 +95,13 @@ export default function Chatgpt() {
       inputRef.current?.blur(); // hide the keyboard when message is sent (on mobile)
       setUserMessage(inputMessage);
       handleSendChatgptUserMessage(inputMessage); // Send The User Message To Chatgpt Api
-      setChatgptMssgGenerated(false);
-      setInputMessage("");
       setChatgptConversation((prev) => [
         // Push The User Message To The Conversation Array
         ...prev,
         { text: inputMessage, animate: false, isloading: true },
       ]);
-
+      setChatgptMssgGenerated(false);
+      setInputMessage("");
       // scroll exactly to bottom
       setTimeout(() => {
         scrollToBottom();
@@ -167,6 +172,12 @@ export default function Chatgpt() {
           chatgptConversation={chatgptConversation}
           chatgptMssgGenerated={chatgptMssgGenerated}
           messages={messages}
+          highlitedMessage={highlitedMessage}
+          setHighlitedMessage={setHighlitedMessage}
+          setIsHighlited={setIsHighlited}
+          targetRef={targetRef}
+          router={router}
+          isHighlited={isHighlited}
         />
       </div>
 

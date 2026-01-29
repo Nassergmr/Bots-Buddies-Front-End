@@ -64,6 +64,11 @@ export default function AllModels() {
     messages,
     setMessages,
     setChatgptConversation,
+    highlitedMessage,
+    setHighlitedMessage,
+    isHighlited,
+    setIsHighlited,
+    targetRef,
   } = useContext(MyContext);
 
   const [userMessage, setUserMessage] = useState("");
@@ -71,11 +76,8 @@ export default function AllModels() {
   const [isScroll, setIsScroll] = useState(false);
   const [showScrollButton, setShowScrollButton] = useState(false);
   const [moveToChat, setMoveToChat] = useState(false);
-  const [isHighlited, setIsHighlited] = useState(false);
-  const [highlitedMessage, setHighlitedMessage] = useState("");
 
   const inputRef = useRef();
-  const targetRef = useRef();
 
   useEffect(() => {
     setBodyColor("#131314");

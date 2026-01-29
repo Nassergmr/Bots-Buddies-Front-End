@@ -26,6 +26,12 @@ export default function Meta() {
     metaMssgGenerated,
     setMetaMssgGenerated,
     messages,
+    highlitedMessage,
+    setIsHighlited,
+    setHighlitedMessage,
+    targetRef,
+    router,
+    isHighlited,
   } = useContext(MyContext);
 
   const [userMessage, setUserMessage] = useState("");
@@ -176,6 +182,12 @@ export default function Meta() {
           messages={messages}
           metaConversation={metaConversation}
           metaMssgGenerated={metaMssgGenerated}
+          highlitedMessage={highlitedMessage}
+          setHighlitedMessage={setHighlitedMessage}
+          setIsHighlited={setIsHighlited}
+          targetRef={targetRef}
+          router={router}
+          isHighlited={isHighlited}
         />
       </div>
 

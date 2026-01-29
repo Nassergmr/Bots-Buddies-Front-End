@@ -22,6 +22,12 @@ export default function Microsoft() {
     microsoftMssgGenerated,
     setMicrosoftMssgGenerated,
     messages,
+    highlitedMessage,
+    setIsHighlited,
+    setHighlitedMessage,
+    targetRef,
+    router,
+    isHighlited,
   } = useContext(MyContext);
 
   const [userMessage, setUserMessage] = useState("");
@@ -172,6 +178,12 @@ export default function Microsoft() {
           microsoftConversation={microsoftConversation}
           microsoftMssgGenerated={microsoftMssgGenerated}
           messages={messages}
+          highlitedMessage={highlitedMessage}
+          setHighlitedMessage={setHighlitedMessage}
+          setIsHighlited={setIsHighlited}
+          targetRef={targetRef}
+          router={router}
+          isHighlited={isHighlited}
         />
       </div>
 

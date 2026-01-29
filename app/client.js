@@ -40,11 +40,15 @@ export default function Client({ children }) {
   const [messages, setMessages] = useState([]);
   const [model, setModel] = useState("");
   const [replySelected, setReplySelected] = useState(false);
+  const [isHighlited, setIsHighlited] = useState(false);
+  const [highlitedMessage, setHighlitedMessage] = useState("");
+  const [modelExceeded, setmodelExceeded] = useState("");
 
   const router = useRouter();
   const socketRef = useRef(null);
   const path = usePathname();
   const messageId = crypto.randomUUID();
+  const targetRef = useRef();
 
   // Chatgpt
   const [chatgptMessage, setChatgptMessage] = useState("");
@@ -102,7 +106,7 @@ export default function Client({ children }) {
         <div className="flex flex-col gap-3 text-center mx-auto">
           <FaExclamationCircle size={32} className="text-[#E64D3C] mx-auto" />
           <div className="text-white">
-            Daily rate limit reached for this model, retry later
+            {`Daily rate limit reached for "${modelExceeded}", retry later`}
           </div>
           {path.includes("core") && (
             <div className="text-white">
@@ -447,7 +451,12 @@ export default function Client({ children }) {
       if (model === "GPT-4.1") {
         setChatgptConversation((prev) => [
           ...prev,
-          { text: userMessage, animate: false, isloading: true },
+          {
+            text: userMessage,
+            messageId: messageId,
+            animate: false,
+            isloading: true,
+          },
         ]);
         socketRef.current.emit(
           "chatgpt_conversation",
@@ -459,7 +468,12 @@ export default function Client({ children }) {
       } else if (model === "Llama 4 Scout 17B 16E Instruct") {
         setMetaConversation((prev) => [
           ...prev,
-          { text: userMessage, animate: false, isloading: true },
+          {
+            text: userMessage,
+            messageId: messageId,
+            animate: false,
+            isloading: true,
+          },
         ]);
         socketRef.current.emit(
           "meta_conversation",
@@ -471,7 +485,12 @@ export default function Client({ children }) {
       } else if (model === "Phi-4-mini-instruct") {
         setMicrosoftConversation((prev) => [
           ...prev,
-          { text: userMessage, animate: false, isloading: true },
+          {
+            text: userMessage,
+            messageId: messageId,
+            animate: false,
+            isloading: true,
+          },
         ]);
         socketRef.current.emit(
           "microsoft_conversation",
@@ -483,7 +502,12 @@ export default function Client({ children }) {
       } else if (model === "Codestral 25.01") {
         setCodestralConversation((prev) => [
           ...prev,
-          { text: userMessage, animate: false, isloading: true },
+          {
+            text: userMessage,
+            messageId: messageId,
+            animate: false,
+            isloading: true,
+          },
         ]);
         socketRef.current.emit(
           "codestral_conversation",
@@ -495,7 +519,12 @@ export default function Client({ children }) {
       } else if (model === "Grok 3 Mini") {
         setXAiConversation((prev) => [
           ...prev,
-          { text: userMessage, animate: false, isloading: true },
+          {
+            text: userMessage,
+            messageId: messageId,
+            animate: false,
+            isloading: true,
+          },
         ]);
         socketRef.current.emit(
           "xai_conversation",
@@ -754,21 +783,59 @@ export default function Client({ children }) {
     });
 
     // Handle the rate limit error (ex: 50 requests a day) and any error
-    socketRef.current.on("rate_limit_exceeded", () => {
+
+    const handleRateLimit = (modelName) => {
+      setmodelExceeded(modelName);
+      setIsLimit(true);
+    };
+
+    socketRef.current.on("rate_limit_exceeded_gpt", () => {
+      handleRateLimit("GPT-4.1");
       setIsLimit(true);
       setTimeout(() => {
         setIsLimit(false);
         setChatgptMssgGenerated(true);
-        setMetaMssgGenerated(true);
-        setMicrosoftMssgGenerated(true);
-        setXaiMssgGenerated(true);
-        setCore42MssgGenerated(true);
-        setCodestralMssgGenerated(true);
         setChatgptMssgGenerated2(true);
+      }, 5000);
+    });
+
+    socketRef.current.on("rate_limit_exceeded_llama", () => {
+      handleRateLimit("Llama 4 Scout 17B 16E Instruct");
+      setIsLimit(true);
+      setTimeout(() => {
+        setIsLimit(false);
+        setMetaMssgGenerated(true);
         setMetaMssgGenerated2(true);
+      }, 5000);
+    });
+
+    socketRef.current.on("rate_limit_exceeded_microsoft", () => {
+      handleRateLimit("Phi-4-mini-instruct");
+      setIsLimit(true);
+      setTimeout(() => {
+        setIsLimit(false);
+        setMicrosoftMssgGenerated(true);
         setMicrosoftMssgGenerated2(true);
-        setXaiMssgGenerated2(true);
+      }, 5000);
+    });
+
+    socketRef.current.on("rate_limit_exceeded_xai", () => {
+      handleRateLimit("Codestral 25.01");
+      setIsLimit(true);
+      setTimeout(() => {
+        setIsLimit(false);
+        setCodestralMssgGenerated(true);
         setCodestralMssgGenerated2(true);
+      }, 5000);
+    });
+
+    socketRef.current.on("rate_limit_exceeded_codestral", () => {
+      handleRateLimit("Grok 3 Mini");
+      setIsLimit(true);
+      setTimeout(() => {
+        setIsLimit(false);
+        setXaiMssgGenerated(true);
+        setXaiMssgGenerated2(true);
       }, 5000);
     });
 
@@ -833,6 +900,12 @@ export default function Client({ children }) {
         setReplySelected,
         handleSendSpecificModelUserMessage,
         handleSendSpecificModelUserMessage2,
+        isHighlited,
+        setIsHighlited,
+        highlitedMessage,
+        setHighlitedMessage,
+        targetRef,
+        router,
 
         // ChatGPT
         chatgptConversation,

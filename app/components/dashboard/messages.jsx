@@ -57,6 +57,7 @@ export default function Messages({
   setIsHighlited,
   highlitedMessage,
   setHighlitedMessage,
+  router,
 }) {
   // Text & Code Formatting
   const renderers = {
@@ -113,10 +114,17 @@ export default function Messages({
               >
                 {messages?.map(
                   (e, index) =>
-                    mssg.text === e.userMessage && (
+                    mssg.messageId === e.messageId && (
                       <div
+                        onClick={() => {
+                          setHighlitedMessage(e.message);
+                          router.push("/parallel");
+                          setTimeout(() => {
+                            scrollToTarget();
+                          }, 200);
+                        }}
                         key={e}
-                        className="w-full py-2 text-gray-300  max-h-[100px]"
+                        className="w-full py-2  text-gray-300 hover:text-gray-50 cursor-pointer transition-all  max-h-[100px]"
                       >
                         <div className="flex ml-auto w-fit items-start gap-2">
                           <HiMiniArrowTurnDownRight size={18} className="" />
@@ -174,10 +182,17 @@ export default function Messages({
               >
                 {messages?.map(
                   (e, index) =>
-                    mssg.text === e.userMessage && (
+                    mssg.messageId === e.messageId && (
                       <div
+                        onClick={() => {
+                          setHighlitedMessage(e.message);
+                          router.push("/parallel");
+                          setTimeout(() => {
+                            scrollToTarget();
+                          }, 200);
+                        }}
                         key={e}
-                        className="w-full py-2 text-gray-300  max-h-[100px]"
+                        className="w-full py-2  text-gray-300 hover:text-gray-50 cursor-pointer transition-all  max-h-[100px]"
                       >
                         <div className="flex ml-auto w-fit items-start gap-2">
                           <HiMiniArrowTurnDownRight size={18} className="" />
@@ -226,7 +241,6 @@ export default function Messages({
                     {mssg.text}
                   </TextAnimate>
                 ) : (
-                  // <TypeWriter text={mssg.text} delay={0.3} infinite />
                   <ReactMarkdown components={renderers}>
                     {mssg.text}
                   </ReactMarkdown>
@@ -248,10 +262,17 @@ export default function Messages({
               >
                 {messages?.map(
                   (e, index) =>
-                    mssg.text === e.userMessage && (
+                    mssg.messageId === e.messageId && (
                       <div
+                        onClick={() => {
+                          setHighlitedMessage(e.message);
+                          router.push("/parallel");
+                          setTimeout(() => {
+                            scrollToTarget();
+                          }, 200);
+                        }}
                         key={e}
-                        className="w-full py-2 text-gray-300  max-h-[100px]"
+                        className="w-full py-2  text-gray-300 hover:text-gray-50 cursor-pointer transition-all  max-h-[100px]"
                       >
                         <div className="flex ml-auto w-fit items-start gap-2">
                           <HiMiniArrowTurnDownRight size={18} className="" />
@@ -285,7 +306,15 @@ export default function Messages({
             {mssg.isai && (
               <span className="leading-relaxed">
                 {mssg.animate ? (
-                  <TypeWriter text={mssg.text} delay={0.3} infinite />
+                  <TextAnimate
+                    animation="blurInUp"
+                    by="character"
+                    duration={6}
+                    startOnView={true}
+                    once={true}
+                  >
+                    {mssg.text}
+                  </TextAnimate>
                 ) : (
                   <ReactMarkdown components={renderers}>
                     {mssg.text}
@@ -308,10 +337,17 @@ export default function Messages({
               >
                 {messages?.map(
                   (e, index) =>
-                    mssg.text === e.userMessage && (
+                    mssg.messageId === e.messageId && (
                       <div
+                        onClick={() => {
+                          setHighlitedMessage(e.message);
+                          router.push("/parallel");
+                          setTimeout(() => {
+                            scrollToTarget();
+                          }, 200);
+                        }}
                         key={e}
-                        className="w-full py-2 text-gray-300  max-h-[100px]"
+                        className="w-full py-2  text-gray-300 hover:text-gray-50 cursor-pointer transition-all  max-h-[100px]"
                       >
                         <div className="flex ml-auto w-fit items-start gap-2">
                           <HiMiniArrowTurnDownRight size={18} className="" />
@@ -367,10 +403,17 @@ export default function Messages({
               >
                 {messages?.map(
                   (e, index) =>
-                    mssg.text === e.userMessage && (
+                    mssg.messageId === e.messageId && (
                       <div
+                        onClick={() => {
+                          setHighlitedMessage(e.message);
+                          router.push("/parallel");
+                          setTimeout(() => {
+                            scrollToTarget();
+                          }, 200);
+                        }}
                         key={e}
-                        className="w-full py-2 text-gray-300  max-h-[100px]"
+                        className="w-full py-2  text-gray-300 hover:text-gray-50 cursor-pointer transition-all  max-h-[100px]"
                       >
                         <div className="flex ml-auto w-fit items-start gap-2">
                           <HiMiniArrowTurnDownRight size={18} className="" />

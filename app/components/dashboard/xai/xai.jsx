@@ -25,6 +25,12 @@ export default function XAi() {
     xaiMssgGenerated,
     setXaiMssgGenerated,
     messages,
+    highlitedMessage,
+    setIsHighlited,
+    setHighlitedMessage,
+    targetRef,
+    router,
+    isHighlited,
   } = useContext(MyContext);
 
   const [userMessage, setUserMessage] = useState("");
@@ -174,6 +180,12 @@ export default function XAi() {
           xAiConversation={xAiConversation}
           xaiMssgGenerated={xaiMssgGenerated}
           messages={messages}
+          highlitedMessage={highlitedMessage}
+          setHighlitedMessage={setHighlitedMessage}
+          setIsHighlited={setIsHighlited}
+          targetRef={targetRef}
+          router={router}
+          isHighlited={isHighlited}
         />
       </div>
 

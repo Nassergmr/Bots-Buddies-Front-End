@@ -27,6 +27,12 @@ export default function Codestral() {
     codestralMssgGenerated,
     setCodestralMssgGenerated,
     messages,
+    highlitedMessage,
+    setIsHighlited,
+    setHighlitedMessage,
+    targetRef,
+    router,
+    isHighlited,
   } = useContext(MyContext);
 
   const [userMessage, setUserMessage] = useState("");
@@ -177,6 +183,12 @@ export default function Codestral() {
           codestralConversation={codestralConversation}
           codestralMssgGenerated={codestralMssgGenerated}
           messages={messages}
+          highlitedMessage={highlitedMessage}
+          setHighlitedMessage={setHighlitedMessage}
+          setIsHighlited={setIsHighlited}
+          targetRef={targetRef}
+          router={router}
+          isHighlited={isHighlited}
         />
       </div>
 
